@@ -5,6 +5,7 @@ import Main from "./components/Main";
 import axios from "axios";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import Edit from "../Settings/Edit";
+import { ToastContainer } from "react-toastify";
 
 function Dashboard(params) {
     const [username,setUsername]=useState()
@@ -37,7 +38,8 @@ useEffect(()=>{
  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900 font-inter  ">
+    <div className="flex h-screen overflow-hidden bg-orange-50 dark:bg-gray-900 font-inter  ">
+      <ToastContainer position="top-center"/>
       <Sidebar collapsed={isCollapsed} toggleCollapse={() => setIsCollapsed(!isCollapsed)} profile={profileurl} username={username} />
       <Main collapsed={isCollapsed} />
 

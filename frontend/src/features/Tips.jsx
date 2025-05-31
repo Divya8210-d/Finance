@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function InvestmentTips() {
   const [openQuestion, setOpenQuestion] = useState(null);
@@ -17,6 +19,12 @@ export default function InvestmentTips() {
   };
 
   const handleSubmit = async () => {
+    const unanswered = questions.find((q) => !answers[q.key]);
+    if (unanswered) {
+      toast.error(`"${unanswered.q}" is required`);
+      return;
+    }
+
     console.log("Submitted Answers:", answers);
     try {
       const res = await axios.post("http://localhost:5000/api/v1/users/tips", answers, {
@@ -27,7 +35,7 @@ export default function InvestmentTips() {
     } catch (err) {
       const message = err.response?.data?.message || "An unknown error occurred";
       console.error("Tips error:", message);
-      alert(message);
+      toast.error(message);
     }
   };
 
@@ -229,7 +237,9 @@ export default function InvestmentTips() {
   ];
 
   return (
-    <div className="p-6 pl-10 text-gray-800 dark:text-gray-200 text-left">
+    <div className="p-6 pl-10 text-gray-800 dark:text-gray-200 text-left font-inter">
+      <ToastContainer position="top-center" autoClose={3000} />
+
       <motion.h1
         className="text-3xl font-bold mb-2"
         initial={{ opacity: 0, y: -20 }}
@@ -242,7 +252,7 @@ export default function InvestmentTips() {
       <hr className="mb-6 border-gray-300 dark:border-gray-600" />
 
       <motion.div
-        className="text-black dark:bg-gray-900 dark:text-white bg-blue-100 p-4 rounded-lg shadow-sm mb-8 text-blue-600 text-semibold"
+        className="text-black dark:bg-gray-900 dark:text-white bg-orange-100 p-4 rounded-lg shadow-sm mb-8 text-semibold"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
@@ -299,7 +309,7 @@ export default function InvestmentTips() {
         {tips.length > 0 && classification && (
           <motion.div
             key="tips"
-            className="text-blue-500 dark:bg-gray-900 dark:text-white bg-blue-100 p-4 rounded-lg shadow-sm mb-8 mt-10"
+            className="dark:bg-gray-900 dark:text-white bg-orange-100 p-4 rounded-lg shadow-sm mb-8 mt-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}

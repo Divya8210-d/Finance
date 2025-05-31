@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Debtlogo from "../Images/Debtlogo.png";
 import { motion } from "framer-motion"; // Import Framer Motion
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function DebtTracker() {
   const [name, setName] = useState("");
@@ -22,10 +26,18 @@ export default function DebtTracker() {
       returnOn,
     };
 
+    if (name === '' || amount === ''||takenOn===""||returnOn==="") {
+      toast.warning("Detail fields are required!!");
+      return;
+    }
+
+
+
+
     await axios
       .post("http://localhost:5000/api/v1/adddebt", submitdata, { withCredentials: true })
       .then((res) => {
-        alert("Your debt updated");
+            toast.success("Your Debt was updated!!");
         setAmount(0);
         setName("");
         setReturnOn(0);
@@ -66,6 +78,7 @@ useEffect(()=>{
   return (
     <div className="mx-auto p-5 font-inter">
       {/* Top Heading */}
+      <ToastContainer position="top-center"/>
       <motion.div
         className="mb-6 flex flex-col"
         initial={{ opacity: 0, y: -20 }}
@@ -78,7 +91,7 @@ useEffect(()=>{
 
       {/* Quote Box */}
       <motion.div
-        className="bg-blue-100 border border-blue-300 text-blue-800 rounded-md p-4 text-center max-w-5xl mx-auto mb-8"
+        className="bg-orange-100 border border-orange-300  rounded-md p-4 text-center max-w-5xl mx-auto mb-8"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}

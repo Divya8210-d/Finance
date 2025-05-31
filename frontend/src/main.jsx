@@ -38,7 +38,11 @@ const rout = createBrowserRouter([
       { path: 'Transactions', element: <Transactions /> },
       { path: 'Others', element: <Others /> },
       { path: 'Progress', element: <Progress /> },
-          { path: 'Calculators', element: <Calculator /> },
+          { path: 'Calculators', element: <Calculator />,children:[{path: 'fd', element: null },
+            {path: 'gst', element: null },
+                 {path: 'credit', element: null },
+                  {path: 'emi', element: null }
+          ] },
       { path: 'edit', element: null },
     ],
   },

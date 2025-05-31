@@ -16,7 +16,7 @@ monthlyincome:{
 },
 //expenses
 
-groceries:{
+Groceries:{
      weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 
@@ -27,7 +27,7 @@ groceries:{
       default: 0
     }
 },
-rents:{
+Rents:{
      weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 
@@ -38,7 +38,7 @@ rents:{
       default: 0
     }
 },
-bills:{
+Bills:{
    weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 
@@ -49,7 +49,7 @@ bills:{
       default: 0
     }
 },
-shoppings:{
+Shoppings:{
    weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 
@@ -60,7 +60,7 @@ shoppings:{
       default: 0
     }
 },
-chilling:{
+Chilling:{
  weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 
@@ -71,7 +71,7 @@ chilling:{
       default: 0
     }
 },
-vehicles:{
+Vehicles:{
   weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 
@@ -82,7 +82,7 @@ vehicles:{
       default: 0
     }
 },
-fees:{
+Fees:{
  weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 
@@ -93,7 +93,7 @@ fees:{
       default: 0
     }
 },
-personal:{
+Personal:{
    weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 
@@ -104,7 +104,7 @@ personal:{
       default: 0
     }
 },
-recharge:{
+Recharge:{
  weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 
@@ -115,7 +115,7 @@ recharge:{
       default: 0
     }
 },
-others:{
+Others:{
    weekly: {
     type: [Number],
     default: [0, 0, 0, 0], 

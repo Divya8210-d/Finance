@@ -1,5 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export default function Edit({ onClose }) {
   const [fullName, setFullName] = useState("");
@@ -16,16 +20,19 @@ export default function Edit({ onClose }) {
 
   await   axios.post("http://localhost:5000/api/v1/users/edit",formData,{withCredentials:true})
 .then((res)=>{
-         alert("Profile edited")
+        toast.success("Profile Updated")
 })
 
-.catch((err)=>{   const message = err.response?.data?.message || "An unknown error occurred";
+.catch((err)=>{   const message = err.response?.data?.message || "Fields are required";
+  toast.warning(message)
       console.log("Editing error",message)
 })
 
 
  
-    onClose(); // Close modal after save
+    setTimeout(() => {
+      onClose();
+    }, 1500);
   };
 
   const handleFileChange = (e) => {
@@ -33,9 +40,15 @@ export default function Edit({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30 ">
-      <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md dark:bg-gray-800">
-        <h2 className="text-xl font-bold mb-4 text-center ">Edit Profile</h2>
+    <motion.div initial={{ opacity: 0,  }}
+        animate={{ opacity: 1,  }}  className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30 ">
+         <ToastContainer  position="top-center"/>
+     
+      <motion.div   initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}  className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md dark:bg-gray-800 border-2 border-orange-300">
+      
+      <h2 className="text-xl font-bold mb-4 text-center ">Edit Profile</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1 ">Full Name</label>
@@ -66,13 +79,13 @@ export default function Edit({ onClose }) {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
             >
               Save
             </button>
           </div>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

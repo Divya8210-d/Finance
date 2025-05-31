@@ -7,6 +7,12 @@ import car from "../Images/car.png";
 import home from "../Images/home.png";
 import gold from "../Images/gold.png";
 import credit from "../Images/credit.png";
+import { useLocation, useNavigate, Outlet } from "react-router-dom";
+import FD from "./Calculators/FD";
+import Gst from "./Calculators/Gst";
+import EMI from "./Calculators/EMI";
+import Credit from "./Calculators/Credit";
+
 
 // Dummy image for each card (you can replace this with individual images)
 const placeholderImage = "https://via.placeholder.com/100";
@@ -15,41 +21,61 @@ const calculators = [
   {
     title: "Gst Amount Calculator",
     description: "Calculate gst for different goods and services.",
-    src:`${gst}`
+    src:`${gst}`,
+    type:"gst"
   },
   {
     title: "Personal Loan EMI Calculator",
     description: "Calculate your monthly EMI for a personal loan.",
-      src:`${personal}`
+      src:`${personal}`,
+     type:"emi"
   },
   {
     title: "Fixed Deposit Interest Calculator",
     description: "Compute the interest earned on your fixed deposit.",
-      src:`${fixed}`
+      src:`${fixed}`,
+       type:"fd"
   },
-  {
-    title: "Car Loan EMI Calculator",
-    description: "Determine your monthly car loan repayment amount.",
-      src:`${car}`
-  },
-  {
-    title: "Home Loan EMI Calculator",
-    description: "Find out your monthly home loan EMI.",
-      src:`${home}`
-  },
-  {
-    title: "Gold Loan EMI Calculator",
-    description: "Calculate the EMI for your gold loan.",
-      src:`${gold}`
-  },
+
+
   {
     title: "Credit Card Debt Payoff Calculator",
     description: "Plan how to pay off your credit card debt efficiently.",
-      src:`${credit}`
+      src:`${credit}`,
+       type:"credit"
   },
 ];
 
 export default function Calculator() {
+
+
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const isfd = location.pathname.endsWith("/fd");
+    const isgst = location.pathname.endsWith("/gst");
+      const iscredit = location.pathname.endsWith("/credit");
+        const isemi = location.pathname.endsWith("/emi");
+
+  const closeModal = () => navigate("/Dashboard/Calculators");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div className="p-6 mx-auto font-inter">
       {/* Heading */}
@@ -80,6 +106,7 @@ export default function Calculator() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={()=>{navigate(`/Dashboard/Calculators/${calc.type}`)}}
                 className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition duration-200"
               >
                 Calculate
@@ -93,6 +120,20 @@ export default function Calculator() {
           </motion.div>
         ))}
       </div>
+   {isfd && (
+        <FD onClose={closeModal} /> // 👈 make sure your modal supports `onClose`
+      )}
+      {isgst && (
+        <Gst onClose={closeModal} /> // 👈 make sure your modal supports `onClose`
+      )}
+      {isemi && (
+        <EMI onClose={closeModal} /> // 👈 make sure your modal supports `onClose`
+      )}
+      {iscredit && (
+        <Credit onClose={closeModal} /> // 👈 make sure your modal supports `onClose`
+      )}
+      
+
     </div>
   );
 }

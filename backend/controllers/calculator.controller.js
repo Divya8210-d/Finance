@@ -79,39 +79,47 @@ return res.status(200).json(new ApiResponse(200,emi,"Fetched EMI"))
 
 
 
-const fdmatureamount = asyncHandler(async (req,res) => {
-    
-const {principalamount,rate,tenure,compounded} = req.body
+const fdmatureamount = asyncHandler(async (req, res) => {
+  const { principalamount, rate, tenure, compounded } = req.body;
 
-
-if(!principalamount){
-    throw new ApiError(400,"Amount is Required")
-}
-if(!compounded){
-    throw new ApiError(400,"Frequency is Required")
-}
-if(!rate){
-    throw new ApiError(400,"Required a interest rate ")
-}
-if(!tenure){
-    throw new ApiError(400,"Tenure of loan is required")
-}
-
-  const r = annualRatePercent / 100;
-
-  const n = compoundingMap[compoundingFrequency];
-  if (!n) {
-    throw new Error('Invalid compounding frequency');
+  if (!principalamount) {
+    throw new ApiError(400, "Amount is Required");
+  }
+  if (!compounded) {
+    throw new ApiError(400, "Frequency is Required");
+  }
+  if (!rate) {
+    throw new ApiError(400, "Interest rate is required");
+  }
+  if (!tenure) {
+    throw new ApiError(400, "Tenure of loan is required");
   }
 
-  const maturityAmount = principal * Math.pow(1 + r / n, n * t)
+  // Define compounding frequencies per year
+  const compoundingMap = {
+    yearly: 1,
+    halfyearly: 2,
+    quarterly: 4,
+    monthly: 12,
+    weekly: 52,
+    daily: 365,
+  };
 
+  const n = compoundingMap[compounded.toLowerCase()];
+  if (!n) {
+    throw new ApiError(400, "Invalid compounding frequency");
+  }
 
+  const principal = parseFloat(principalamount);
+  const r = parseFloat(rate) / 100;
+  const t = parseFloat(tenure);
 
+  const maturityAmount = principal * Math.pow(1 + r / n, n * t);
 
-return res.status(200).json( new ApiResponse(200,maturityAmount,"Fetched Maturityamount"))
-
-})
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { maturedAmount: maturityAmount.toFixed(2) }, "Fetched Maturity Amount"));
+});
 
 
 

@@ -4,6 +4,8 @@ import asyncHandler from "../utilss/asynchandler.js";
 import { Spends } from "../models/spending.model.js";
 import Razorpay from "razorpay";
 import crypto from "crypto";
+import { Transaction } from "../models/transaction.model.js";
+import { ApiError } from "../utilss/ApiError.js";
 
 
 const razorpay = new Razorpay({
@@ -36,7 +38,8 @@ const verifyandsavepayment = asyncHandler(async (req, res) => {
     razorpay_signature,
     month,
     category,       
-    amount,       
+    amount,
+    date,       
     weekIndex       
   } = req.body;
 
@@ -65,10 +68,24 @@ const verifyandsavepayment = asyncHandler(async (req, res) => {
   }
 
   const spendingDoc = await Spends.findOne({user:req.user.email ,month})
+  const transactionDoc =await Transaction.findOne({user:req.user.email ,amount,category,date})
+    if (transactionDoc) {
+    return res.status(404).json(new ApiResponse(404, "Payment has already being done"));
+  }
 
   if (!spendingDoc) {
     return res.status(404).json(new ApiResponse(404, "Spending record not found"));
   }
+
+const transaction = await  Transaction.create({
+    user:req.user.email,
+    category:category,
+    amount:amount,
+    dateofpurchase:new Date(date)
+
+
+})
+
 
 const parsedAmount = parseFloat(amount);
 if (isNaN(parsedAmount) || parsedAmount <= 0) {
@@ -85,4 +102,31 @@ if (isNaN(parsedAmount) || parsedAmount <= 0) {
 
 
 
-export {createorder,verifyandsavepayment}
+const recenttransactions = asyncHandler(async (req, res) => {
+  const { date } = req.body;
+
+  if (!date) {
+    throw new ApiError(400, "Date is required");
+  }
+
+  // Create start and end date for the full day
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date(date);
+  end.setHours(23, 59, 59, 999);
+
+  const transactions = await Transaction.find({
+    user: req.user.email,
+    dateofpurchase: {
+      $gte: start,
+      $lte: end,
+    },
+  });
+
+  return res.status(200).json(new ApiResponse(200, transactions, "Transactions Fetched"));
+});
+
+
+
+export {createorder,verifyandsavepayment ,recenttransactions}

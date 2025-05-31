@@ -62,7 +62,7 @@ const LoginForm = () => {
       setLemail("");
       setLpassword("");
       localStorage.setItem("logged", JSON.stringify(res.data.data.user));
-      navigate("/Dashboard");
+      navigate("/Dashboard/Insights");
     })
     .catch((err) => {
       const message = err.response?.data?.message || "An unknown error occurred";

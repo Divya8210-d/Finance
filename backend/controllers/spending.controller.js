@@ -9,8 +9,9 @@ import { ApiResponse } from "../utilss/ApiResponse.js";
 const addexpense = asyncHandler(async (req,res) => {
     
 
-const {month,monthlyincome,groceries,rents,bills,shopping,chilling,vehicles,fess,personal,recharge,others}
+const {month,monthlyincome,Groceries,Rents,Bills,Shoppings,Chilling,Vehicles,Fees,Personal,Recharge,Others}
 =req.body;
+console.log("Incoming Expense Data:", req.body);
 
 if(!monthlyincome){
     throw new ApiError(400,"Monthlyincome is required")
@@ -19,17 +20,17 @@ if(!monthlyincome){
 const expense = await Spends.findOne({user:req.user.email ,month})
 
 if(expense){
-    throw new ApiError(401,"Spends already created")
+    throw new ApiError(400,"Spends already created")
 }
 
 
 //baaki fieLd ka validation hum frontend me dekh lenge
  const add = await Spends.create({ user:req.user.email,month,
-monthlyincome,groceries,rents,bills,shopping,chilling,vehicles,fess,personal,recharge,others
+monthlyincome,Groceries,Rents,Bills,Shoppings,Chilling,Vehicles,Fees,Personal,Recharge,Others
  })
 
 
-return res.status(200).json(new ApiResponse(200,{user:req.user.fullname},"Expenses saved"))
+return res.status(200).json(new ApiResponse(200,{user:req.user.fullname,add},"Expenses saved"))
 
 
 })
@@ -39,36 +40,37 @@ const updateexpense = asyncHandler(async (req, res) => {
   const {
     month,
     monthlyincome,
-    groceries,
-    rents,
-    bills,
-    shoppings,
-    chilling,
-    vehicles,
-    fees,
-    personal,
-    recharge,
-    others,
+    Groceries,
+    Rents,
+    Bills,
+    Shoppings,
+    Chilling,
+    Vehicles,
+    Fees,
+    Personal,
+    Recharge,
+    Others,
     
   } = req.body;
+console.log("Incoming Expense Data:", req.body);
 
   const existing = await Spends.findOne({ user: req.user.email, month });
 
   if (!existing) {
-    throw new ApiError(402, "No spendings available to update. Please add the spending sheet first.");
+    throw new ApiError(400, "No spendings available to update. Please add the spending sheet first.");
   }
 
   const allCategories = {
-    groceries,
-    rents,
-    bills,
-    shoppings,
-    chilling,
-    vehicles,
-    fees,
-    personal,
-    recharge,
-    others,
+    Groceries,
+    Rents,
+    Bills,
+    Shoppings,
+    Chilling,
+    Vehicles,
+    Fees,
+    Personal,
+    Recharge,
+    Others,
 
   };
 

@@ -1,3 +1,5 @@
+
+
 import asyncHandler from "../utilss/asynchandler.js";
 import { Spends } from "../models/spending.model.js";
 import { ApiError } from "../utilss/ApiError.js";
@@ -8,7 +10,7 @@ import parseAiResponse from "../utilss/parse.js";
 
 
 const track = asyncHandler(async (req,res) => {
-    const {p} = req.body
+    const {question} = req.body
 console.log("Request body:", req.body);
 
 
@@ -17,6 +19,7 @@ const data = await Spends.find({user:req.user.email}).sort({ month: 1 })//if emp
 if(!data || data.length === 0){
     throw new ApiError(400,"No expense data found")
 }
+console.log(data);
 
 
 const promptdata = `
@@ -35,7 +38,7 @@ Here is the user's full financial history:
 ${JSON.stringify(data, null, 2)}
 
 Now answer this user question in detail:
-${p}
+${question}
 
 Make sure to:
 - Refer to specific months or categories where relevant
@@ -44,26 +47,36 @@ Make sure to:
 `;
 
 
-
-
-const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-  method: "POST",
-  headers: {
-    "Authorization": `Bearer ${process.env.GROQAPI}`,
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-model: "llama3-70b-8192",
-    messages: [
-      { role: "system", content: "You are a helpful and knowledgeable financial advisor AI." },
-      { role: "user", content: promptdata }
-    ]
-  })
+let response;
+try {
+  response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.GROQAPI}`,
+      "Content-Type": "application/json"
+    },
+        body: JSON.stringify({
+      model: "llama3-70b-8192",
+      messages: [
+        { role: "system", content: "You are a helpful and knowledgeable financial advisor AI." },
+        { role: "user", content: promptdata }
+      ]
+    })
+  });
+  console.log("Headers:", {
+  Authorization: `Bearer ${process.env.GROQAPI}`,
+  "Content-Type": "application/json"
 });
-
+} catch (err) {
+  console.error("Network or fetch error:", err);
+  throw new ApiError(500, "Failed to send request to Groq API");
+}
 
 
 const result = await response.json();
+console.log("Loaded Groq API Key:", process.env.GROQAPI);
+console.log(result);
+
 
 
 if (!result.choices || !result.choices[0]?.message?.content) {
