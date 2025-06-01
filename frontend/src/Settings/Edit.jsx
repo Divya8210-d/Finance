@@ -18,7 +18,7 @@ export default function Edit({ onClose }) {
 
 
 
-  await   axios.post("http://localhost:5000/api/v1/users/edit",formData,{withCredentials:true})
+  await   axios.post("https://finanlytic.onrender.com/api/v1/users/edit",formData,{withCredentials:true})
 .then((res)=>{
         toast.success("Profile Updated")
 })

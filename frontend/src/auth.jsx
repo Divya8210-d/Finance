@@ -56,7 +56,7 @@ const LoginForm = () => {
       password: lpassword
     };
 
-    axios.post("http://localhost:5000/api/v1/users/login", data, {
+    axios.post("https://finanlytic.onrender.com/api/v1/users/login", data, {
       withCredentials: true
     })
     .then((res) => {
@@ -126,7 +126,7 @@ const RegisterForm = () => {
     formData.append('email', remail);
     formData.append('password', rpassword);
 
-    axios.post("http://localhost:5000/api/v1/users/register", formData)
+    axios.post("https://finanlytic.onrender.com/api/v1/users/register", formData)
       .then((res) => {
         toast.success("Registered");
         setFullname("");

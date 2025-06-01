@@ -31,7 +31,7 @@ export default function Sidebar({ collapsed, toggleCollapse, profile, username }
 
   const logout = async () => {
     try {
-      await axios.post("http://localhost:5000/api/v1/users/logout", null, { withCredentials: true });
+      await axios.post("https://finanlytic.onrender.com/api/v1/users/logout", null, { withCredentials: true });
   toast.success("Logged out successfuly")
       localStorage.removeItem("logged");
       navigate("/");
@@ -44,7 +44,7 @@ export default function Sidebar({ collapsed, toggleCollapse, profile, username }
 
   const deleteaccount = async () => {
     try {
-      await axios.post("http://localhost:5000/api/v1/users/delete", null, { withCredentials: true });
+      await axios.post("https://finanlytic.onrender.com/api/v1/users/delete", null, { withCredentials: true });
        toast.success("Account Deleted")
       localStorage.removeItem("logged");
       navigate("/");

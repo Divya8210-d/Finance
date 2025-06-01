@@ -11,7 +11,7 @@ const Progress = () => {
   const getAnswer = async (userQuestion) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/v1/dashboard/track",
+        "https://finanlytic.onrender.com/api/v1/dashboard/track",
         { question: userQuestion },
         { withCredentials: true }
       );

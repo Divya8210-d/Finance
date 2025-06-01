@@ -27,7 +27,7 @@ export default function InvestmentTips() {
 
     console.log("Submitted Answers:", answers);
     try {
-      const res = await axios.post("http://localhost:5000/api/v1/dashboard/tips", answers, {
+      const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/tips", answers, {
         withCredentials: true,
       });
       setClassification(res.data.data.classification);

@@ -155,8 +155,10 @@ const login = asyncHandler(async (req, res) => {
 
     const options = {      //jab bhi cookie bhejna ho yeh important hai or fixed hai format
         httpOnly: true,
-        secure: false
+            secure: true,        
+    sameSite: "None" 
     }
+
 
  return res.status(200)
  .cookie("accessToken", accessToken, options)
@@ -186,7 +188,8 @@ const logout = asyncHandler(async (req,res) => {
 
     const options = {
         httpOnly: true,
-        secure: false
+        secure: true,        
+    sameSite: "None" 
     }
 
     return res

@@ -32,7 +32,7 @@ export default function Transactions() {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/payment/createorder",
+        "https://finanlytic.onrender.com/api/v1/payment/createorder",
         { amount: finalAmount },
         { withCredentials: true }
       );
@@ -55,7 +55,7 @@ export default function Transactions() {
           } = response;
 
           const verifyRes = await axios.post(
-            "http://localhost:5000/api/v1/payment/verifypay",
+            "https://finanlytic.onrender.com/api/v1/payment/verifypay",
             {
               razorpay_order_id,
               razorpay_payment_id,
@@ -90,7 +90,7 @@ export default function Transactions() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/v1/payment/todaytransaction",
+        "https://finanlytic.onrender.com/api/v1/payment/todaytransaction",
         { date: today },
         { withCredentials: true }
       );

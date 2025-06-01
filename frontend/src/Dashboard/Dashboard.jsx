@@ -23,7 +23,7 @@ function Dashboard(params) {
 
 
 useEffect(()=>{
-  axios.get("http://localhost:5000/api/v1/users/profile", {withCredentials: true} )
+  axios.get("https://finanlytic.onrender.com/api/v1/users/profile", {withCredentials: true} )
   .then((res)=>{
     setUsername(res.data.data.fullname)
     

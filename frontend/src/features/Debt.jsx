@@ -35,7 +35,7 @@ export default function DebtTracker() {
 
 
     await axios
-      .post("http://localhost:5000/api/v1/dashboard/adddebt", submitdata, { withCredentials: true })
+      .post("https://finanlytic.onrender.com/api/v1/dashboard/adddebt", submitdata, { withCredentials: true })
       .then((res) => {
             toast.success("Your Debt was updated!!");
         setAmount(0);
@@ -56,7 +56,7 @@ async function getdebts(params) {
 
 
 
-  await axios.post("http://localhost:5000/api/v1/dashboard/getdebt",{},{withCredentials:true})
+  await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/getdebt",{},{withCredentials:true})
   .then((res)=>{
     setDebts(res.data.data)
   }).catch((err)=>{

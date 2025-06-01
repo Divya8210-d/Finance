@@ -62,8 +62,8 @@ const Expenses = () => {
 
     const url =
       operation === "Add Expenses"
-        ? "http://localhost:5000/api/v1/dashboard/expenses"
-        : "http://localhost:5000/api/v1/dashboard/updateexpenses";
+        ? "https://finanlytic.onrender.com/api/v1/dashboard/expenses"
+        : "https://finanlytic.onrender.com/api/v1/dashboard/updateexpenses";
 
     try {
       await axios.post(url, expenseData, { withCredentials: true });
