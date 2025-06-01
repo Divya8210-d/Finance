@@ -1,17 +1,23 @@
-/*import { Router, } from "express";
-import { upload } from "../middlewares/multer.middleware.js";
-import register from "../controllers/user.controller.js";
-import express from "express";
+import express from 'express';
+import { register,login,logout ,deleteaccount,profilefetch,edit } from '../controllers/user.controller.js';
+import verify from '../middlewares/auth.middleware.js';
+import { upload } from '../middlewares/multer.middleware.js';
 
-const userRouter = Router()
+const router = express.Router();
 
-
-userRouter.route("/register").post(upload.fields([
+router.post("/register",upload.fields([
     {
         name: "profile",
         maxCount: 1
-    }]),register)
+    }]), register);
+router.post("/login", login);
+router.post("/logout", verify, logout);
+router.post("/delete", verify, deleteaccount);
+router.get("/profile",verify,profilefetch);
+router.get("/edit",verify,upload.fields([
+    {
+        name: "profile",
+        maxCount: 1
+    }]),edit);
 
-
-export default userRouter
-*/
+export default router;

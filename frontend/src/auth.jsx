@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { ToastContainer,toast } from 'react-toastify';
 
 export default function Auth() {
   const [activeTab, setActiveTab] = useState('login');
 
   return (
     <div className="min-h-[600px] flex items-center justify-center bg-transparent">
+
       <div className="w-full max-w-sm backdrop-blur-md bg-white/30 border border-white/40 rounded-3xl shadow-lg overflow-hidden">
         {/* Tabs */}
         <div className="relative">
@@ -58,16 +60,19 @@ const LoginForm = () => {
       withCredentials: true
     })
     .then((res) => {
-      alert("Logged in");
+    toast.success("Logged in")
       setLemail("");
       setLpassword("");
       localStorage.setItem("logged", JSON.stringify(res.data.data.user));
-      navigate("/Dashboard/Insights");
+      setTimeout(() => {
+            navigate("/Dashboard/Insights");
+      }, 3000);
+  
     })
     .catch((err) => {
       const message = err.response?.data?.message || "An unknown error occurred";
-      console.error("Login error:", message);
-      alert(message);
+      
+  toast.error(message)
     });
   };
 
@@ -123,7 +128,7 @@ const RegisterForm = () => {
 
     axios.post("http://localhost:5000/api/v1/users/register", formData)
       .then((res) => {
-        alert("Registered");
+        toast.success("Registered");
         setFullname("");
         setRemail("");
         setRpassword("");

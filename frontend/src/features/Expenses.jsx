@@ -62,8 +62,8 @@ const Expenses = () => {
 
     const url =
       operation === "Add Expenses"
-        ? "http://localhost:5000/api/v1/users/expenses"
-        : "http://localhost:5000/api/v1/users/updateexpenses";
+        ? "http://localhost:5000/api/v1/dashboard/expenses"
+        : "http://localhost:5000/api/v1/dashboard/updateexpenses";
 
     try {
       await axios.post(url, expenseData, { withCredentials: true });
@@ -72,7 +72,7 @@ const Expenses = () => {
     } catch (err) {
       const message =
         err.response?.data?.message || "Spends already exist you can update it";
-      console.error(`${operation} error:`, message);
+    
       toast.error(message);
     }
   };

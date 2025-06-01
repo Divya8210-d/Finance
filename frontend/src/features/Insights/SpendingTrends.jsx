@@ -33,7 +33,7 @@ function SpendingTrends() {
   useEffect(() => {
     const fetchTrends = async () => {
       try {
-        const res = await axios.post("http://localhost:5000/api/v1/spendingtrends",{}, {
+        const res = await axios.post("http://localhost:5000/api/v1/dashboard/spendingtrends",{}, {
           withCredentials: true,
         });
 

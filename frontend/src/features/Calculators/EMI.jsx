@@ -13,7 +13,7 @@ export default function EMI({ onClose }) {
     const Data = { loanamount, rate, tenure,  };
 
     try {
-      const res = await axios.post("http://localhost:5000/api/v1/emi", Data, {
+      const res = await axios.post("http://localhost:5000/api/v1/dashboard/emi", Data, {
         withCredentials: true,
       });
       const result = res.data?.data;

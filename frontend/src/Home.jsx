@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import About from "./Mainpage/About";
 import Features from "./Mainpage/Features";
 import Footer from "./Mainpage/Footer";
@@ -9,7 +10,7 @@ function Home(params) {
   
   return(<>
   <main>
-    
+    <ToastContainer position="top-center"/>
     <Navbar/>
   <Hero/>
   <About/>

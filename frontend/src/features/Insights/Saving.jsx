@@ -21,7 +21,7 @@ function Saving() {
     try {
       setLoading(true);
 
-      const res = await axios.post("http://localhost:5000/api/v1/saving", { month },{withCredentials:true});
+      const res = await axios.post("http://localhost:5000/api/v1/dashboard/saving", { month },{withCredentials:true});
           console.log("Savings response:", res.data);
       const { totalexpense, saving , aiRaw } = res.data.data;
 

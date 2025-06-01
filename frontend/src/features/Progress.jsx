@@ -11,14 +11,14 @@ const Progress = () => {
   const getAnswer = async (userQuestion) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/v1/users/track",
+        "http://localhost:5000/api/v1/dashboard/track",
         { question: userQuestion },
         { withCredentials: true }
       );
       const answer = res.data.data;
       setMessages((prev) => [...prev, { sender: "system", text: answer }]);
     } catch (error) {
-      console.error("Error getting answer:", error);
+      
       toast.error("Failed ");
     }
   };

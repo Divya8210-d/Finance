@@ -35,7 +35,7 @@ export default function DebtTracker() {
 
 
     await axios
-      .post("http://localhost:5000/api/v1/adddebt", submitdata, { withCredentials: true })
+      .post("http://localhost:5000/api/v1/dashboard/adddebt", submitdata, { withCredentials: true })
       .then((res) => {
             toast.success("Your Debt was updated!!");
         setAmount(0);
@@ -45,7 +45,7 @@ export default function DebtTracker() {
         getdebts()
       })
       .catch((err) => {
-        console.log("Debt adding error", err.response?.data?.message || err.message);
+        toast.error( err.response?.data?.message || err.message);
       });
 
 
@@ -56,11 +56,11 @@ async function getdebts(params) {
 
 
 
-  await axios.post("http://localhost:5000/api/v1/getdebt",{},{withCredentials:true})
+  await axios.post("http://localhost:5000/api/v1/dashboard/getdebt",{},{withCredentials:true})
   .then((res)=>{
     setDebts(res.data.data)
   }).catch((err)=>{
-    console.log("Debts erro");
+    toast.error(err.response?.data?.message)
     
   })
 }
