@@ -153,49 +153,10 @@ const RegisterForm = () => {
   };
 
   return (
-    <form className="space-y-6" onSubmit={register}>
-      <div>
-        <label htmlFor="register-email" className="block text-sm font-medium text-gray-700">Email</label>
-        <input
-          type="email"
-          id="register-email"
-          name="email"
-          required
-          value={remail}
-          onChange={(e) => setRemail(e.target.value)}
-          className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:outline-none"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="register-username" className="block text-sm font-medium text-gray-700">Username</label>
-        <input
-          type="text"
-          id="register-username"
-          name="username"
-          required
-          value={fullname}
-          onChange={(e) => setFullname(e.target.value)}
-          className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:outline-none"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="register-password" className="block text-sm font-medium text-gray-700">Password</label>
-        <input
-          type="password"
-          id="register-password"
-          name="password"
-          required
-          value={rpassword}
-          onChange={(e) => setRpassword(e.target.value)}
-          className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:outline-none"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="user-image" className="block text-sm font-medium text-gray-700 mb-1">Profile Picture</label>
-        <div className="flex items-center space-x-4">
+    <form className="space-y-4" onSubmit={register}>
+        <div>
+    
+        <div className="flex-col items-center space-x-2">
           {previewUrl ? (
             <img
               src={previewUrl}
@@ -219,6 +180,54 @@ const RegisterForm = () => {
         </div>
       </div>
 
+
+
+   <div>
+        <label htmlFor="register-username" className="block text-sm font-medium text-gray-700">Username</label>
+        <input
+          type="text"
+          id="register-username"
+          name="username"
+          required
+          value={fullname}
+          onChange={(e) => setFullname(e.target.value)}
+          className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:outline-none"
+        />
+      </div>
+
+
+
+
+
+      <div>
+        <label htmlFor="register-email" className="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          type="email"
+          id="register-email"
+          name="email"
+          required
+          value={remail}
+          onChange={(e) => setRemail(e.target.value)}
+          className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:outline-none"
+        />
+      </div>
+
+   
+
+      <div>
+        <label htmlFor="register-password" className="block text-sm font-medium text-gray-700">Password</label>
+        <input
+          type="password"
+          id="register-password"
+          name="password"
+          required
+          value={rpassword}
+          onChange={(e) => setRpassword(e.target.value)}
+          className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:outline-none"
+        />
+      </div>
+
+    
       <button
         type="submit"
         className="w-full py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
