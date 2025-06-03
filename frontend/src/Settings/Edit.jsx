@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router";
 
 
 export default function Edit({ onClose }) {
   const [fullName, setFullName] = useState("");
   const [profilePic, setProfilePic] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit =  async (e) => {
     e.preventDefault();
@@ -32,6 +34,7 @@ export default function Edit({ onClose }) {
  
     setTimeout(() => {
       onClose();
+      
     }, 1500);
   };
 

@@ -16,7 +16,7 @@ function Dashboard(params) {
 
   const isEdit = location.pathname.endsWith("/edit");
 
-  const closeModal = () => navigate("/Dashboard");
+  const closeModal = () => navigate("/Dashboard/Insights");
 
 
 

@@ -7,8 +7,7 @@ import { motion } from "framer-motion";
 
 function Insights() {
   return (
-    <div className="p-6 space-y-6">
-
+    <div className="p-6 space-y-6 bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
       {/* Saving Chart and Insight Summary */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}

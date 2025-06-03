@@ -24,7 +24,7 @@ function Week() {
   );
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [insight,setInsights] = useState(null)
+  const [insight, setInsights] = useState(null);
 
   const fetchWeeklyData = async (month) => {
     try {
@@ -34,7 +34,7 @@ function Week() {
         { month },
         { withCredentials: true }
       );
-           setInsights(res.data.data.aiRaw)
+      setInsights(res.data.data.aiRaw);
       const spendingDoc = res.data.data.spendingDoc[0];
       if (!spendingDoc) return;
 
@@ -52,7 +52,7 @@ function Week() {
       setData(formattedData);
     } catch (error) {
       console.error("Error fetching weekly data", error);
-    toast.error("Something went wrong")
+      toast.error("Something went wrong");
       setData([]);
     } finally {
       setLoading(false);
@@ -64,34 +64,41 @@ function Week() {
   }, [selectedMonth]);
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-md mt-6">
-      <ToastContainer position="top-center"/>
-      <h2 className="text-xl font-semibold mb-4 text-left">Weekly Expense Trends</h2>
+    <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md mt-6 dark:text-gray-200">
+      <ToastContainer position="top-center" />
+      <h2 className="text-xl font-semibold mb-4 text-left dark:text-gray-100">Weekly Expense Trends</h2>
 
       <select
-        className="p-2 border border-gray-300 rounded-md mb-4"
+        className="p-2 border border-gray-300 rounded-md mb-4
+                   dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200
+                   focus:outline-none focus:ring-2 focus:ring-orange-400"
         value={selectedMonth}
         onChange={(e) => setSelectedMonth(e.target.value)}
       >
         {MONTHS.map((month) => (
-          <option key={month} value={month}>
+          <option key={month} value={month} className="dark:bg-gray-700">
             {month}
           </option>
         ))}
       </select>
 
       {loading ? (
-        <p>Loading...</p>
+        <p className="dark:text-gray-300">Loading...</p>
       ) : data.length === 0 ? (
-        <p className="text-red-500">No data available for {selectedMonth}</p>
+        <p className="text-red-500 dark:text-red-400">No data available for {selectedMonth}</p>
       ) : (
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="category" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
+            <CartesianGrid strokeDasharray="3 3" stroke={document.body.classList.contains('dark') ? "#4B5563" : "#ccc"} />
+            <XAxis dataKey="category" stroke={document.body.classList.contains('dark') ? "#D1D5DB" : "#333"} />
+            <YAxis stroke={document.body.classList.contains('dark') ? "#D1D5DB" : "#333"} />
+            <Tooltip
+              contentStyle={{ backgroundColor: "#1a202c", borderColor: "#2d3748" }}
+              itemStyle={{ color: "#e2e8f0" }}
+            />
+            <Legend
+              wrapperStyle={{ color: document.body.classList.contains('dark') ? "#D1D5DB" : "#333" }}
+            />
             {["Week1", "Week2", "Week3", "Week4"].map((week, idx) => (
               <Line
                 key={week}
@@ -104,14 +111,13 @@ function Week() {
           </LineChart>
         </ResponsiveContainer>
       )}
-      <div className="bg-orange-100 rounded-xl p-4 w-full mt-4">
-        <h2 className="text-xl font-semibold mb-2">Weekly Expense Insights</h2>
-        <p className="text-gray-700 mb-2">
-       {insight}
-        </p>
-      
-      </div>
 
+      <div className="bg-orange-100 dark:bg-orange-900 rounded-xl p-4 w-full mt-4">
+        <h2 className="text-xl font-semibold mb-2 dark:text-orange-300">Weekly Expense Insights</h2>
+        <p className="text-gray-700 dark:text-orange-100 mb-2">
+          {insight}
+        </p>
+      </div>
     </div>
   );
 }
