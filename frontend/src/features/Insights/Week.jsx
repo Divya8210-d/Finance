@@ -51,8 +51,8 @@ function Week() {
 
       setData(formattedData);
     } catch (error) {
-      console.error("Error fetching weekly data", error);
-      toast.error("Something went wrong");
+    
+      toast.error(error.response?.data?.message||"Something went wrong");
       setData([]);
     } finally {
       setLoading(false);

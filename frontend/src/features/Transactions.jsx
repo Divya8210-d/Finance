@@ -81,7 +81,7 @@ export default function Transactions() {
       rzp.open();
     } catch (error) {
       
-      toast.error("Payment failed. Please try again.");
+      toast.error(error.response?.data?.message||"Payment failed. Please try again.");
     }
   };
 

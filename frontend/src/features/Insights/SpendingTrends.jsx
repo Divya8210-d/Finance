@@ -69,8 +69,8 @@ function SpendingTrends() {
         setChartData(finalChartData);
         setMonths(Object.keys(categoryTotalsByMonth));
       } catch (error) {
-        console.error("Error fetching spending trends", error);
-        toast.error("Something went wrong ");
+        
+        toast.error(error.response?.data?.message||"Something went wrong ");
       }
     };
 

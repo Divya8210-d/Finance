@@ -18,7 +18,7 @@ const Progress = () => {
       const answer = res.data.data;
       setMessages((prev) => [...prev, { sender: "system", text: answer }]);
     } catch (error) {
-      toast.error("Failed to get AI response");
+      toast.error(error.response?.data?.message||"Failed to get AI response");
     }
   };
 
@@ -151,7 +151,7 @@ const Progress = () => {
           onClick={sendMessage}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="absolute top-1/2 right-2 bg-orange-600 dark:bg-orange-500 text-white px-4 text-sm rounded-md hover:bg-orange-500 dark:hover:bg-orange-400 h-[calc(100%-30px)]"
+          className="absolute top-[30px] right-2 bg-orange-600 dark:bg-orange-500 text-white px-4 text-sm rounded-md hover:bg-orange-500 dark:hover:bg-orange-400 h-[calc(100%-30px)]"
         >
           Send
         </motion.button>

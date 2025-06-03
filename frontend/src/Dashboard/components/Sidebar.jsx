@@ -34,11 +34,14 @@ export default function Sidebar({ collapsed, toggleCollapse, profile, username }
       await axios.post("https://finanlytic.onrender.com/api/v1/users/logout", null, { withCredentials: true });
   toast.success("Logged out successfuly")
       localStorage.removeItem("logged");
-      navigate("/");
+      setTimeout(() => {
+           navigate("/");
+      }, 1500);
+   
     } catch (err) {
       const message = err.response?.data?.message || "An unknown error occurred";
-      console.error("Logout error:", message);
-      alert(message);
+    
+      toast.error(message)
     }
   };
 
@@ -47,7 +50,9 @@ export default function Sidebar({ collapsed, toggleCollapse, profile, username }
       await axios.post("https://finanlytic.onrender.com/api/v1/users/delete", null, { withCredentials: true });
        toast.success("Account Deleted")
       localStorage.removeItem("logged");
-      navigate("/");
+           setTimeout(() => {
+           navigate("/");
+      }, 1500);
     } catch (err) {
       const message = err.response?.data?.message || "An unknown error occurred";
       console.error("Logout error:", message);
@@ -121,7 +126,7 @@ export default function Sidebar({ collapsed, toggleCollapse, profile, username }
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25 }}
-                className="absolute left-2 top-full mt-1 w-[200px] bg-white dark:bg-gray-700 text-black dark:text-white border rounded-xl shadow z-20"
+                className="absolute left-2 top-full mt-1 w-[200px] bg-white dark:bg-gray-700 text-black dark:text-white border rounded-xl shadow z-50"
               >
                 <ul className="text-sm">
                   <li
