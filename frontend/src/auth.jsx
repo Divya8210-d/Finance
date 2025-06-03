@@ -153,7 +153,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <form className="space-y-4" onSubmit={register}>
+    <form className="space-y-2" onSubmit={register}>
       <div className="flex flex-col items-center gap-y-4 mb-4">
   {previewUrl ? (
     <img
@@ -227,7 +227,7 @@ const RegisterForm = () => {
     
       <button
         type="submit"
-        className="w-full py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        className="w-full py-4 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
       >
         Register
       </button>
