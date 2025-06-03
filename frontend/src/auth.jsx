@@ -154,31 +154,28 @@ const RegisterForm = () => {
 
   return (
     <form className="space-y-4" onSubmit={register}>
-        <div>
-    
-        <div className="flex-col gap-2 items-center space-x-6">
-          {previewUrl ? (
-            <img
-              src={previewUrl}
-              alt="Preview"
-              className="w-16 h-16 rounded-full object-cover border border-gray-300"
-            />
-          ) : (
-            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm border border-gray-300">
-              No Image
-            </div>
-          )}
-          <label className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium">
-            Upload
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-          </label>
-        </div>
-      </div>
+      <div className="flex flex-col items-center gap-y-4 mb-4">
+  {previewUrl ? (
+    <img
+      src={previewUrl}
+      alt="Preview"
+      className="w-20 h-20 rounded-full object-cover border border-gray-300"
+    />
+  ) : (
+    <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm border border-gray-300">
+      No Image
+    </div>
+  )}
+  <label className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium">
+    Upload
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleImageChange}
+      className="hidden"
+    />
+  </label>
+</div>
 
 
 
