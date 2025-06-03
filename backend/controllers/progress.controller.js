@@ -17,7 +17,7 @@ const track = asyncHandler(async (req, res) => {
 Here is the user's full financial history:
 ${JSON.stringify(data, null, 2)}
 
-Use this data to answer all future questions.
+Use this data and also use the real world data to compare and answer all future questions.
 `;
 
   const chatMessages = [

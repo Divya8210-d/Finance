@@ -5,6 +5,15 @@ import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+const defaultCategories = [
+  'Groceries', 'Rents', 'Bills', 'Shoppings',
+  'Chilling', 'Vehicles', 'Fees', 'Personal',
+  'Recharge', 'Others'
+];
+
+
+
 export default function Transactions() {
   const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState("");
@@ -131,20 +140,24 @@ export default function Transactions() {
     </div>
 
     <form onSubmit={handlePayment} className="space-y-6">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Category
-        </label>
-        <select
-          className="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          required
-        >
-          <option value="">Select Category</option>
-          {/* ...options */}
-        </select>
-      </div>
+     <div>
+  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+    Category
+  </label>
+  <select
+    className="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+    required
+  >
+    <option value="">Select Category</option>
+    {defaultCategories.map((cat, idx) => (
+      <option key={idx} value={cat}>
+        {cat}
+      </option>
+    ))}
+  </select>
+</div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

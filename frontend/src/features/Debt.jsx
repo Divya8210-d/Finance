@@ -172,7 +172,7 @@ export default function DebtTracker() {
                   onChange={async () => {
                     try {
                       await axios.post(
-                        "http://localhost:5000/api/v1/updatedebt",
+                        "https://finanlytic.onrender.com/api/v1/updatedebt",
                         { name: debt.name, paid: !debt.paid ,amount:debt.amount},
                         { withCredentials: true }
                       );
