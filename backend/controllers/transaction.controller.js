@@ -53,10 +53,12 @@ const verifyandsavepayment = asyncHandler(async (req, res) => {
   }
 
 
-  const validCategories = [
-    "groceries", "rents", "bills", "shoppings", "chilling",
-    "vehicles", "fees", "personal", "recharge", "others"
-  ];
+  const validCategories =[
+  'Groceries', 'Rents', 'Bills', 'Shoppings',
+  'Chilling', 'Vehicles', 'Fees', 'Personal',
+  'Recharge', 'Others'
+];
+
 
   if (!validCategories.includes(category)) {
     return res.status(400).json(new ApiResponse(400, "Invalid category"));
