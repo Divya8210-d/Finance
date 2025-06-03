@@ -156,7 +156,7 @@ const RegisterForm = () => {
     <form className="space-y-4" onSubmit={register}>
         <div>
     
-        <div className="flex-col items-center space-x-2">
+        <div className="flex-col gap-2 items-center space-x-6">
           {previewUrl ? (
             <img
               src={previewUrl}
