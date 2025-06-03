@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
@@ -9,6 +9,16 @@ export default function InvestmentTips() {
   const [answers, setAnswers] = useState({});
   const [classification, setClassification] = useState();
   const [tips, setTips] = useState([]);
+  const [isDark, setIsDark] = useState(true); // optional toggle state
+
+  // Optional: Apply dark class to <html> element
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDark]);
 
   const toggleQuestion = (index) => {
     setOpenQuestion(openQuestion === index ? null : index);
@@ -25,7 +35,6 @@ export default function InvestmentTips() {
       return;
     }
 
-    console.log("Submitted Answers:", answers);
     try {
       const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/tips", answers, {
         withCredentials: true,
@@ -34,7 +43,6 @@ export default function InvestmentTips() {
       setTips(res.data.data.tips);
     } catch (err) {
       const message = err.response?.data?.message || "An unknown error occurred";
-    
       toast.error(message);
     }
   };
@@ -237,8 +245,16 @@ export default function InvestmentTips() {
   ];
 
   return (
-    <div className="p-6 pl-10 text-gray-800 dark:text-gray-200 text-left font-inter">
+    <div className="p-6 pl-10 text-gray-800 dark:text-gray-200 text-left font-inter bg-white dark:bg-black min-h-screen">
       <ToastContainer position="top-center" autoClose={3000} />
+
+      {/* Optional Dark Mode Toggle */}
+      <button
+        onClick={() => setIsDark(!isDark)}
+        className="mb-4 px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-white"
+      >
+        Toggle Dark Mode
+      </button>
 
       <motion.h1
         className="text-3xl font-bold mb-2"
@@ -298,7 +314,7 @@ export default function InvestmentTips() {
         transition={{ delay: 0.2 }}
       >
         <button
-          className="bg-orange-500 dark:bg-white text-white dark:text-black px-6 py-2 rounded hover:opacity-90 transition"
+          className="bg-orange-500 dark:bg-white text-white dark:text-black px-6 py-2 rounded hover:opacity-90 dark:hover:bg-gray-300 transition"
           onClick={handleSubmit}
         >
           Submit
