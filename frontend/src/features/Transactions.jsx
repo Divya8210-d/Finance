@@ -6,11 +6,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
-const defaultCategories = [
-  'Groceries', 'Rents', 'Bills', 'Shoppings',
-  'Chilling', 'Vehicles', 'Fees', 'Personal',
-  'Recharge', 'Others'
-];
+const defaultCategories =  [
+    "groceries", "rents", "bills", "shoppings", "chilling",
+    "vehicles", "fees", "personal", "recharge", "others"
+  ];
 
 
 
