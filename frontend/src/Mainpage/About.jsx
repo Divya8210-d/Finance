@@ -16,7 +16,7 @@ export default function About() {
     show: { opacity: 1, y: 0, transition: { duration: 1, ease: 'easeOut' } },
   };
 
-  return (
+  return (<section id="about">
     <main className="min-h-[600px] bg-gradient-to-r from-orange-100 to-orange-300 px-6 md:px-16 py-16 text-orange-900">
       {/* Heading */}
       <motion.h2
@@ -71,6 +71,6 @@ export default function About() {
           </p>
         </motion.div>
       </motion.div>
-    </main>
+    </main></section>
   );
 }

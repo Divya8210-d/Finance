@@ -3,7 +3,10 @@ import Auth from '../auth';
 import bull from '../Images/bull.png';
 
 export default function Hero() {
-  return (
+
+
+
+  return (    <section id="home" >
     <main className="bg-gradient-to-r from-orange-400 to-orange-600 min-h-[700px] flex justify-center px-8 pt-2 relative overflow-hidden">
       <div className="max-w-6xl w-full flex flex-col lg:flex-row gap-11 relative z-10">
         
@@ -51,6 +54,6 @@ export default function Hero() {
           </div>
         </motion.div>
       </div>
-    </main>
+    </main></section>
   );
 }

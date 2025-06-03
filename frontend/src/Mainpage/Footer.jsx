@@ -2,7 +2,20 @@ import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 export default function Footer() {
-  return (
+
+  const handleScroll = (id) => {
+  
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 300); 
+  };
+
+
+
+  return (    <section id="footer">
     <footer className="bg-gradient-to-l from-orange-100 to-orange-200 text-gray-800 py-10 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Contact Info */}
@@ -34,10 +47,10 @@ export default function Footer() {
         >
           <h3 className="text-xl font-bold mb-4">Quick Links</h3>
           <ul className="space-y-2">
-            <li><a href="#" className="hover:text-orange-600">Home</a></li>
-            <li><a href="#" className="hover:text-orange-600">About</a></li>
-            <li><a href="#" className="hover:text-orange-600">Features</a></li>
-            <li><a href="#" className="hover:text-orange-600">Contact</a></li>
+            <li   onClick={() => handleScroll('home')} ><a  className="hover:text-orange-600">Home</a></li>
+            <li   onClick={() => handleScroll('about')}><a  className="hover:text-orange-600">About</a></li>
+            <li   onClick={() => handleScroll('features')}><a className="hover:text-orange-600">Features</a></li>
+            <li   onClick={() => handleScroll('footer')}><a  className="hover:text-orange-600">Contact</a></li>
           </ul>
         </motion.div>
 
@@ -74,6 +87,6 @@ export default function Footer() {
       >
         © {new Date().getFullYear()} Finanlytic. All rights reserved.
       </motion.div>
-    </footer>
+    </footer></section>
   );
 }

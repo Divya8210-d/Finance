@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { toast, ToastContainer } from "react-toastify";
 
 const COLORS = ["#FFA500", "#00C49F"]; // Color for Expense and Saving
@@ -35,8 +35,8 @@ function Saving() {
       ]);
       setInsights(aiRaw);
     } catch (error) {
-      console.error("Error fetching saving data", error);
-      toast.error("Something went wrong");
+         toast.error(error.response?.data?.message||"Something went wrong ")
+      
       setData(null);
     } finally {
       setLoading(false);
@@ -48,7 +48,7 @@ function Saving() {
   }, [selectedMonth]);
 
   return (
-    <div className="flex flex-wrap flex-col md:flex-row gap-4 dark:bg-gray-900 dark:text-gray-200 min-h-screen p-4">
+    <div className="flex flex-col md:flex-row gap-4 dark:bg-gray-900 dark:text-gray-200 min-h-screen p-4">
       <ToastContainer />
       <div className="flex flex-col w-full md:w-1/2 bg-white dark:bg-gray-800 dark:border dark:border-gray-700 shadow-lg rounded-xl p-4">
         <h2 className="text-xl font-semibold mb-4 text-left dark:text-gray-100">Savings</h2>
@@ -70,40 +70,38 @@ function Saving() {
         {loading ? (
           <p className="mt-4 dark:text-gray-300">Loading...</p>
         ) : data ? (
-          <div className="mt-4 w-full h-[350px] md:h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={data}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius="80%"
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) =>
-                    `${name}: ${(percent * 100).toFixed(0)}%`
-                  }
-                >
-                  {data.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: "#1a202c", borderColor: "#2d3748" }}
-                  itemStyle={{ color: "#e2e8f0" }}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  iconType="circle"
-                  wrapperStyle={{ marginLeft: -50 }}
-                  formatter={(value) => <span className="text-sm dark:text-gray-300">{value}</span>}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+          <div className="">
+            <PieChart width={650} height={400}>
+              <Pie
+                data={data}
+                cx="40%"
+                cy="48%"
+                labelLine={false}
+                outerRadius={130}
+                fill="#8884d8"
+                dataKey="value"
+                label={({ name, percent }) =>
+                  `${name}: ${(percent * 100).toFixed(0)}%`
+                }
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{ backgroundColor: "#1a202c", borderColor: "#2d3748" }}
+                itemStyle={{ color: "#e2e8f0" }}
+              />
+              <Legend
+                verticalAlign="bottom"
+                iconType="circle"
+                wrapperStyle={{ marginLeft: -50 }}
+                formatter={(value) => <span className="text-sm dark:text-gray-300">{value}</span>}
+              />
+            </PieChart>
           </div>
         ) : (
           <p className="mt-4 text-red-500 dark:text-red-400">
@@ -112,7 +110,7 @@ function Saving() {
         )}
       </div>
 
-      <div className="max-w-5xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+      <div className="max-w-5xl md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
         <h2 className="text-xl font-semibold mb-2 dark:text-orange-300">
           Some Insights regarding your savings
         </h2>

@@ -35,7 +35,7 @@ const features = [
 ];
 
 export default function Features() {
-  return (
+  return (   <section id="features">
     <motion.div
       initial={{ backgroundPosition: "100% 0%" }}
       whileInView={{ backgroundPosition: "0% 0%" }}
@@ -64,6 +64,6 @@ export default function Features() {
           </motion.div>
         ))}
       </div>
-    </motion.div>
+    </motion.div></section>
   );
 }
