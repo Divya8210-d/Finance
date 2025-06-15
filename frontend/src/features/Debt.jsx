@@ -13,7 +13,6 @@ export default function DebtTracker() {
   const [debts, setDebts] = useState([]);
   const [debtStatus, setDebtStatus] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [status,setStatus] = useState(false)
 
   useEffect(() => {
     getDebts();
@@ -64,11 +63,11 @@ export default function DebtTracker() {
     }
   }
 
-  async function deleteDebt(name) {
+  async function deleteDebt(id) {
     try {
       await axios.post(
         "https://finanlytic.onrender.com/api/v1/dashboard/deletedebt",
-        { name },
+        { id },
         { withCredentials: true }
       );
       toast.success("Debt deleted");
@@ -79,38 +78,28 @@ export default function DebtTracker() {
   }
 
   return (
-    <div className="p-5 font-inter min-h-screen flex justify-center items-start bg-gray-50">
+    <div className="p-5 font-inter min-h-screen bg-gray-50 flex justify-center">
       <ToastContainer position="top-center" />
-      <div className="w-full max-w-5xl bg-white shadow-lg rounded-lg p-6">
-        <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Debt Tracker</h1>
+      <div className="w-full max-w-6xl">
+        <h1 className="text-3xl font-bold mb-6 text-center">Debt Tracker</h1>
 
-          <div className="flex gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
-            <input
-              type="text"
-              placeholder="Search by name"
-              className="border px-3 py-2 rounded w-full sm:w-80"
-              onChange={(e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                setDebts(prev =>
-                  prev.filter(d => d.name.toLowerCase().includes(searchTerm))
-                );
-              }}
-            />
-            <button
-              onClick={() => setShowForm(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded"
-            >
-              Add Debt
-            </button>
-          </div>
-        </div>
+        <div className="flex flex-wrap gap-2 justify-center sm:justify-between mb-6">
+          <input
+            type="text"
+            placeholder="Search by name"
+            className="border px-3 py-2 rounded w-full sm:w-64"
+            onChange={(e) => {
+              const searchTerm = e.target.value.toLowerCase();
+              setDebts(prev =>
+                prev.filter(d => d.name.toLowerCase().includes(searchTerm))
+              );
+            }}
+          />
 
-        <div className="flex gap-4 mb-4 flex-wrap">
           <select
             value={debtStatus}
             onChange={(e) => setDebtStatus(e.target.value)}
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded w-full sm:w-40"
           >
             <option value="">All Status</option>
             <option value="Paid">Paid</option>
@@ -119,15 +108,22 @@ export default function DebtTracker() {
 
           <button
             onClick={applyFilter}
-            className="bg-green-600 text-white px-4 py-2 rounded"
+            className="bg-green-600 text-white px-4 py-2 rounded w-full sm:w-auto"
           >
             Apply Filter
+          </button>
+
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto"
+          >
+            Add Debt
           </button>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-100 rounded">
+          <table className="min-w-full bg-white shadow rounded">
+            <thead className="bg-gray-100">
               <tr>
                 <th className="text-left p-2">Select</th>
                 <th className="text-left p-2">Name</th>
@@ -143,15 +139,26 @@ export default function DebtTracker() {
                 debts.map((debt, index) => (
                   <motion.tr
                     key={index}
-                    className="bg-white shadow-sm rounded-lg mb-2"
                     whileHover={{ scale: 1.02 }}
+                    className="bg-white"
                   >
                     <td className="p-2">
-                      <input type="checkbox" value={status} onChange={async(e)=>{  setStatus(e.target.value)
-                             await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/updatedebt",{
-                              paid:status,id:debt._id
-                             },{withCredentials:true})
-                      }} />
+                      <input
+                        type="checkbox"
+                        checked={debt.paid}
+                        onChange={async (e) => {
+                          try {
+                            await axios.post(
+                              "https://finanlytic.onrender.com/api/v1/dashboard/updatedebt",
+                              { paid: e.target.checked, id: debt._id },
+                              { withCredentials: true }
+                            );
+                            getDebts();
+                          } catch (err) {
+                            toast.error(err.response?.data?.message || err.message);
+                          }
+                        }}
+                      />
                     </td>
                     <td className="p-2">{debt.name}</td>
                     <td className="p-2">₹{debt.amount}</td>
@@ -160,7 +167,7 @@ export default function DebtTracker() {
                     <td className="p-2">{debt.paid ? "Paid" : "Unpaid"}</td>
                     <td className="p-2">
                       <button
-                        onClick={() => deleteDebt(debt.name)}
+                        onClick={() => deleteDebt(debt._id)}
                         className="text-red-500 hover:text-red-700"
                       >
                         <FaTrash />
@@ -170,7 +177,9 @@ export default function DebtTracker() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="p-4 text-center text-gray-500">No debts found.</td>
+                  <td colSpan="7" className="p-4 text-center text-gray-500">
+                    No debts found.
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -178,7 +187,6 @@ export default function DebtTracker() {
         </div>
       </div>
 
-      {/* Debt Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <motion.div
@@ -248,7 +256,6 @@ export default function DebtTracker() {
     </div>
   );
 }
-
 
   /*
     <motion.div
