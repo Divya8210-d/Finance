@@ -79,9 +79,9 @@ const getDebt = asyncHandler(async (req, res) => {
 
 
 const updatedebt = asyncHandler(async (req, res) => {
-  const { paid, name,amount } = req.body;
+  const { paid, id } = req.body;
 
-  if (typeof paid !== "boolean" || !name || !amount) {
+  if (typeof paid !== "boolean"  || !id) {
     throw new ApiError(400, "Paid status and name and amount are required");
   }
 
@@ -90,7 +90,7 @@ const updatedebt = asyncHandler(async (req, res) => {
     throw new ApiError(404," debt record not found");
   }
 
-  const debtToUpdate = debtDoc.debts.find((d) => d.name === name&&d.amount==amount);
+  const debtToUpdate = debtDoc.debts.find((d) => d._id===id);
   if (!debtToUpdate) {
     throw new ApiError(404, "Debt with provided name not found");
   }
@@ -155,27 +155,44 @@ return res.status(200).json( new ApiResponse(200,unpaiddebts,"Fetched unpaid deb
 
 
 
-const filterbyamount = asyncHandler(async (req,res) => {
-     
-const {amount}  = req.body;
-
-
-
-
-})
-
-
-
 
 const removeDebt = asyncHandler(async (req,res) => {
 
+const {id} = req.body;
+
+if(!id){
+
+  throw new ApiError(400,"Debt selction is required")
+}
+
+
+const debt = await Debt.findOne({
+   user:req.user.email,
+    
+})
+
+if(!debt){
+  throw new ApiError(500,"No debt records of user found")
+}
+
+
+const deletedebt = await debt.debts.findOneandDelete({
+  _id:id
+})
+
+
+if(!deletedebt){
+  throw new ApiError(500,"Unable to delete the debt")
+}  
 
 
 
 
-  
+return res.status(200).json(ApiResponse(200,deletedebt,"Debt Deleted"))
+
+
 })
 
 
 
-export {adddebt ,getDebt,updatedebt,filtereddebts}
+export {adddebt ,getDebt,updatedebt,filtereddebts,removeDebt}
