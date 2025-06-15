@@ -83,7 +83,7 @@ export default function DebtTracker() {
       <div className="w-full ">
         <h1 className="text-3xl font-bold mb-6 text-center">Debt Tracker</h1>
 
-        <div className="flex  gap-2 justify-center sm:justify-between mb-6">
+        <div className="flex gap-4 sm:justify-between mb-6">
           <input
             type="text"
             placeholder="Search by name"
@@ -95,6 +95,12 @@ export default function DebtTracker() {
               );
             }}
           />
+                <button
+            onClick={() => setShowForm(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto"
+          >
+            Add Debt
+          </button>
 
           <select
             value={debtStatus}
@@ -113,12 +119,7 @@ export default function DebtTracker() {
             Apply Filter
           </button>
 
-          <button
-            onClick={() => setShowForm(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto"
-          >
-            Add Debt
-          </button>
+    
         </div>
 
         <div className="overflow-x-auto">
