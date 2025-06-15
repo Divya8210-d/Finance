@@ -87,7 +87,7 @@ const updatedebt = asyncHandler(async (req, res) => {
 
   const debtDoc = await Debt.findOne({ user: req.user.email });
   if (!debtDoc) {
-    throw new ApiError(404, "No1111`    q    debt record not found");
+    throw new ApiError(404," debt record not found");
   }
 
   const debtToUpdate = debtDoc.debts.find((d) => d.name === name&&d.amount==amount);
@@ -102,4 +102,80 @@ const updatedebt = asyncHandler(async (req, res) => {
 });
 
 
-export {adddebt ,getDebt,updatedebt}
+const filtereddebts = asyncHandler(async (req,res) => {
+
+const {status}= req.body;
+
+if(status=""){
+  throw new ApiError(400,"Status of Debt is required.")
+
+}
+
+const debtDoc = await Debt.findOne({ user: req.user.email });
+
+if(!debtDoc){
+  throw new ApiError(500,"No debts records found")
+}
+
+
+if(status=="Debt cleared"){
+
+const paiddebts = await debtDoc.debts.filter((d)=>
+  d.paid=="paid"
+)
+
+if(paiddebts.length==0){
+  throw new ApiError(500,"No paid debts found")
+}
+
+
+return res.status(200).json( new ApiResponse(200,paiddebts,"Fetched paid debts"))
+
+}
+
+
+else{
+
+const unpaiddebts = await debtDoc.debts.filter((d)=>
+  d.paid="unpaid"
+
+)
+
+if(unpaiddebts.length==0){
+  throw new ApiError(500,"No unpaid debts found")
+}
+
+
+return res.status(200).json( new ApiResponse(200,unpaiddebts,"Fetched unpaid debts"))
+
+}
+
+
+})
+
+
+
+const filterbyamount = asyncHandler(async (req,res) => {
+     
+const {amount}  = req.body;
+
+
+
+
+})
+
+
+
+
+const removeDebt = asyncHandler(async (req,res) => {
+
+
+
+
+
+  
+})
+
+
+
+export {adddebt ,getDebt,updatedebt,filtereddebts}
