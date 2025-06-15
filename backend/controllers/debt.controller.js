@@ -106,7 +106,7 @@ const filtereddebts = asyncHandler(async (req,res) => {
 
 const {status}= req.body;
 
-if(status=""){
+if(status==""){
   throw new ApiError(400,"Status of Debt is required.")
 
 }
@@ -166,43 +166,36 @@ return res.status(200).json( new ApiResponse(200,unpaiddebts,"Fetched unpaid deb
 
 
 
-const removeDebt = asyncHandler(async (req,res) => {
+const removeDebt = asyncHandler(async (req, res) => { //important concept sikhe yahan se finbyidand delete model paer lagta hai array par nhi
+  const { id } = req.body;
+                          // yeh bhi kar sakte hain  debt.debts = debt.debts.filter(d => d._id.toString() !== id);
+  if (!id) {
+    throw new ApiError(400, "Debt selection is required");
+  }
 
-const {id} = req.body;
+  // Find the user's debt document
+  const debt = await Debt.findOne({
+    user: req.user.email,
+  });
 
-if(!id){
+  if (!debt) {
+    throw new ApiError(500, "No debt records of user found");
+  }
 
-  throw new ApiError(400,"Debt selction is required")
-}
+  // Find the subdocument by ID and remove it
+  const subDebt = debt.debts.id(id);
 
+  if (!subDebt) {
+    throw new ApiError(404, "Debt not found");
+  }
 
-const debt = await Debt.findOne({
-   user:req.user.email,
-    
-})
+  subDebt.remove();
 
-if(!debt){
-  throw new ApiError(500,"No debt records of user found")
-}
+  // Save the parent document after removing the subdocument
+  await debt.save();
 
-
-const deletedebt = await debt.debts.findByIdandDelete({
-  _id:id
-})
-
-
-if(!deletedebt){
-  throw new ApiError(500,"Unable to delete the debt")
-}  
-
-
-
-
-return res.status(200).json(ApiResponse(200,deletedebt,"Debt Deleted"))
-
-
-})
-
+  return res.status(200).json(ApiResponse(200, subDebt, "Debt Deleted"));
+});
 
 
 export {adddebt ,getDebt,updatedebt,filtereddebts,removeDebt}
