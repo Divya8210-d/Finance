@@ -101,7 +101,7 @@ export default function DebtTracker() {
             onChange={(e) => setDebtStatus(e.target.value)}
             className="border px-3 py-2 rounded w-full sm:w-40"
           >
-            <option value="">All Status</option>
+            <option value="">All</option>
             <option value="Paid">Paid</option>
             <option value="Unpaid">Unpaid</option>
           </select>

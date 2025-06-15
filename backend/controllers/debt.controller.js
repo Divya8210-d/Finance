@@ -90,9 +90,9 @@ const updatedebt = asyncHandler(async (req, res) => {
     throw new ApiError(404," debt record not found");
   }
 
-  const debtToUpdate = debtDoc.debts.find((d) => d._id===id);
+  const debtToUpdate = debtDoc.debts.find((d) => d._id==id);
   if (!debtToUpdate) {
-    throw new ApiError(404, "Debt with provided name not found");
+    throw new ApiError(404, "Debt  not found");
   }
 
   debtToUpdate.paid = paid;
@@ -118,10 +118,10 @@ if(!debtDoc){
 }
 
 
-if(status=="Debt cleared"){
+if(status=="Paid"){
 
 const paiddebts = await debtDoc.debts.filter((d)=>
-  d.paid=="paid"
+  d.paid==true
 )
 
 if(paiddebts.length==0){
@@ -133,11 +133,21 @@ return res.status(200).json( new ApiResponse(200,paiddebts,"Fetched paid debts")
 
 }
 
+else if(status=="All"){
+  const debts = await debtDoc.debts
+
+if(debts.length==0){
+  throw new ApiError(500,"No  debts found")
+}
+
+
+return res.status(200).json( new ApiResponse(200,debts,"Fetched paid debts"))
+}
 
 else{
 
 const unpaiddebts = await debtDoc.debts.filter((d)=>
-  d.paid="unpaid"
+  d.paid==false
 
 )
 
@@ -176,7 +186,7 @@ if(!debt){
 }
 
 
-const deletedebt = await debt.debts.findOneandDelete({
+const deletedebt = await debt.debts.findByIdandDelete({
   _id:id
 })
 
