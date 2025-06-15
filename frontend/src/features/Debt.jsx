@@ -80,10 +80,10 @@ export default function DebtTracker() {
   return (
     <div className="p-5 font-inter min-h-screen bg-gray-50 flex justify-center">
       <ToastContainer position="top-center" />
-      <div className="w-full max-w-6xl">
+      <div className="w-full ">
         <h1 className="text-3xl font-bold mb-6 text-center">Debt Tracker</h1>
 
-        <div className="flex flex-wrap gap-2 justify-center sm:justify-between mb-6">
+        <div className="flex  gap-2 justify-center sm:justify-between mb-6">
           <input
             type="text"
             placeholder="Search by name"
