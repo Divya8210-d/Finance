@@ -83,11 +83,11 @@ export default function DebtTracker() {
       <div className="w-full ">
         <h1 className="text-3xl font-bold mb-6 text-center">Debt Tracker</h1>
 
-        <div className="flex gap-4 sm:justify-between mb-6">
+        <div className="flex gap-2 sm:justify-between mb-6">
           <input
             type="text"
             placeholder="Search by name"
-            className="border px-3 py-2 rounded w-full sm:w-64"
+            className="border px-7 py-2 rounded w-full sm:w-64"
             onChange={(e) => {
               const searchTerm = e.target.value.toLowerCase();
               setDebts(prev =>
