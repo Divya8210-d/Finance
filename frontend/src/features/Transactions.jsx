@@ -19,6 +19,8 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const transactionsPerPage = 5;
 
   function getWeekIndexAndMonth(dateInput) {
     const date = new Date(dateInput);
@@ -37,11 +39,12 @@ export default function Transactions() {
     const today = new Date().toISOString().split("T")[0];
     try {
       const res = await axios.post(
-        "https://finanlytic.onrender.com/api/v1/payment/todaytransaction",
+        "https://finanlytic.onrender.com/api/v1/payment/transactions",
         { date: today },
         { withCredentials: true }
       );
       setTransactions(res.data.data);
+      setCurrentPage(1); // Reset to first page on fetch
     } catch (err) {
       toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
     }
@@ -51,14 +54,20 @@ export default function Transactions() {
     todayTransactions();
   }, []);
 
+  // Calculate paginated transactions
+  const indexOfLast = currentPage * transactionsPerPage;
+  const indexOfFirst = indexOfLast - transactionsPerPage;
+  const currentTransactions = transactions.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(transactions.length / transactionsPerPage);
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6 font-inter">
+    <div className="min-h-screen bg-gray-50 p-6 font-inter relative">
       <ToastContainer position="top-center" autoClose={3000} />
 
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">All Transactions</h1>
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => setShowForm(true)}
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded"
         >
           ADD TRANSACTION
@@ -66,94 +75,103 @@ export default function Transactions() {
       </div>
 
       {showForm && (
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="w-full max-w-3xl bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6 mx-auto mb-8"
-        >
-          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white text-center sm:text-left">
-              Transactions
-            </h1>
-            <motion.img
-              src={paidseal}
-              alt="Paid Seal"
-              className="h-[110px] w-[110px] mt-4 mx-auto sm:mt-0 sm:ml-4"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            />
-          </div>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              // handlePayment logic should go here if you add Razorpay integration back
-              toast.info("Payment handler not implemented in this minimal code!");
-            }}
-            className="space-y-6"
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg relative"
           >
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Category
-              </label>
-              <select
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required
-              >
-                <option value="">Select Category</option>
-                {defaultCategories.map((cat, idx) => (
-                  <option key={idx} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Date
-              </label>
-              <input
-                type="date"
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => {
-                  const { weekIndex, month } = getWeekIndexAndMonth(e.target.value);
-                  setMonth(month);
-                  setWeek(weekIndex);
-                  setSelectedDate(e.target.value);
-                }}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Amount (₹)
-              </label>
-              <input
-                type="number"
-                placeholder="Amount"
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setAmount(e.target.value)}
-                required
-                min={1}
-              />
-            </div>
-
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.02 }}
-              type="submit"
-              className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-white"
             >
-              Pay
-            </motion.button>
-          </form>
-        </motion.div>
+              ✕
+            </button>
+
+            <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+                Add Transaction
+              </h1>
+              <motion.img
+                src={paidseal}
+                alt="Paid Seal"
+                className="h-16 w-16 mt-2 sm:mt-0"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              />
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                toast.info("Payment handler not implemented!");
+                setShowForm(false);
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Category
+                </label>
+                <select
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {defaultCategories.map((cat, idx) => (
+                    <option key={idx} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
+                  onChange={(e) => {
+                    const { weekIndex, month } = getWeekIndexAndMonth(e.target.value);
+                    setMonth(month);
+                    setWeek(weekIndex);
+                    setSelectedDate(e.target.value);
+                  }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Amount (₹)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Amount"
+                  min={1}
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                />
+              </div>
+
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                type="submit"
+                className="w-full bg-orange-500 text-white py-2 rounded font-semibold hover:bg-orange-600 transition"
+              >
+                Pay
+              </motion.button>
+            </form>
+          </motion.div>
+        </div>
       )}
 
       <div className="overflow-x-auto">
@@ -168,14 +186,14 @@ export default function Transactions() {
             </tr>
           </thead>
           <tbody>
-            {transactions.length === 0 ? (
+            {currentTransactions.length === 0 ? (
               <tr>
                 <td colSpan="5" className="text-center p-4 text-gray-500">
                   No transactions found today.
                 </td>
               </tr>
             ) : (
-              transactions.map((txn, idx) => (
+              currentTransactions.map((txn, idx) => (
                 <tr key={idx} className="border-t hover:bg-gray-50">
                   <td className="p-2">{txn.category}</td>
                   <td className="p-2">{txn.date || "N/A"}</td>
@@ -190,6 +208,28 @@ export default function Transactions() {
           </tbody>
         </table>
       </div>
+
+      {transactions.length > transactionsPerPage && (
+        <div className="flex justify-center mt-4 space-x-2">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="px-3 py-1">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

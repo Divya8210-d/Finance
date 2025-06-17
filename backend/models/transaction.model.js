@@ -5,6 +5,16 @@ const trnsactionSchema = new Schema(
     type:String,
     required:true
 },
+
+mode:{
+    type:String,
+    required:true
+
+
+},
+
+
+
 category:{
     type:String,
     required:true

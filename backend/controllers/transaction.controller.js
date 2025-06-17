@@ -37,7 +37,8 @@ const verifyandsavepayment = asyncHandler(async (req, res) => {
     razorpay_payment_id,
     razorpay_signature,
     month,
-    category,       
+    category,
+    mode,       
     amount,
     date,       
     weekIndex       
@@ -70,7 +71,7 @@ const verifyandsavepayment = asyncHandler(async (req, res) => {
   }
 
   const spendingDoc = await Spends.findOne({user:req.user.email ,month})
-  const transactionDoc =await Transaction.findOne({user:req.user.email ,amount,category,date})
+  const transactionDoc =await Transaction.findOne({user:req.user.email ,amount,mode,category,date})
     if (transactionDoc) {
     return res.status(404).json(new ApiResponse(404, "Payment has already being done"));
   }
@@ -82,6 +83,7 @@ const verifyandsavepayment = asyncHandler(async (req, res) => {
 const transaction = await  Transaction.create({
     user:req.user.email,
     category:category,
+    mode:mode,
     amount:amount,
     dateofpurchase:new Date(date)
 
@@ -131,4 +133,24 @@ const recenttransactions = asyncHandler(async (req, res) => {
 
 
 
-export {createorder,verifyandsavepayment ,recenttransactions}
+
+const alltransactions   = asyncHandler(async (req,res) => {
+
+
+
+  const transacDoc = await Transaction.find({
+    user:req.user.email
+  })
+
+if(!transacDoc){
+  throw new ApiError(500,"No Transactions Available for this user")
+}
+
+return res.status(200).json(new ApiResponse(200,transacDoc,"Transactions Fetched"))
+
+  
+})
+
+
+
+export {createorder,verifyandsavepayment ,recenttransactions, alltransactions}
