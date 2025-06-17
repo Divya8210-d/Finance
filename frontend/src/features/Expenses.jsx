@@ -23,10 +23,25 @@ const Expenses = () => {
   );
   const [operation, setOperation] = useState("Add Expenses");
 
+  // Budget Goal States
+  const [budgetMonth, setBudgetMonth] = useState("");
+  const [budgetAmount, setBudgetAmount] = useState("");
+  const [categoryAllocations, setCategoryAllocations] = useState(
+    defaultCategories.map(() => ({ amount: "", priority: 3 }))
+  );
+  const [savingTarget, setSavingTarget] = useState("");
+  const [description, setDescription] = useState("");
+
   const handleExpenseChange = (categoryIndex, weekIndex, value) => {
     const newExpenses = [...expenses];
     newExpenses[categoryIndex][weekIndex] = Number(value);
     setExpenses(newExpenses);
+  };
+
+  const handleCategoryAllocationChange = (index, field, value) => {
+    const updated = [...categoryAllocations];
+    updated[index][field] = value;
+    setCategoryAllocations(updated);
   };
 
   const calculateCategoryTotal = (categoryIndex) =>
@@ -79,9 +94,9 @@ const Expenses = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="p-6 md:p-10 max-w-6xl mx-auto font-inter text-gray-800 dark:text-gray-200"
+      className="p-6 md:p-10 max-w-7xl mx-auto font-inter text-gray-800 dark:text-gray-200"
     >
-      <ToastContainer position='top-center' />
+      <ToastContainer position="top-center" />
       <h1 className="text-3xl font-extrabold text-center mb-6">
         Monthly Expenses Tracker
       </h1>
@@ -91,7 +106,7 @@ const Expenses = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.5 }}
-        className="grid md:grid-cols-3 gap-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-gray-700 mb-6"
+        className="grid md:grid-cols-3 gap-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-gray-700 mb-6 w-full"
       >
         {/* Operation */}
         <div>
@@ -139,17 +154,17 @@ const Expenses = () => {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.4, duration: 0.5 }}
-        className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-700"
+        className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-700 w-full"
       >
         <table className="min-w-full text-sm text-center">
           <thead className="bg-orange-100 dark:bg-orange-800 text-gray-900 dark:text-orange-100 text-base">
             <tr>
-              <th className="p-3 border border-gray-300 dark:border-gray-600">Category</th>
-              <th className="p-3 border border-gray-300 dark:border-gray-600">Week 1</th>
-              <th className="p-3 border border-gray-300 dark:border-gray-600">Week 2</th>
-              <th className="p-3 border border-gray-300 dark:border-gray-600">Week 3</th>
-              <th className="p-3 border border-gray-300 dark:border-gray-600">Week 4</th>
-              <th className="p-3 border border-gray-300 dark:border-gray-600">Total</th>
+              <th className="p-3">Category</th>
+              <th className="p-3">Week 1</th>
+              <th className="p-3">Week 2</th>
+              <th className="p-3">Week 3</th>
+              <th className="p-3">Week 4</th>
+              <th className="p-3">Total</th>
             </tr>
           </thead>
           <tbody className="text-gray-700 dark:text-gray-300">
@@ -161,9 +176,9 @@ const Expenses = () => {
                 transition={{ delay: i * 0.05 }}
                 className="hover:bg-orange-50 dark:hover:bg-orange-900"
               >
-                <td className="p-3 border border-gray-300 dark:border-gray-600 font-medium">{category}</td>
+                <td className="p-3 font-medium">{category}</td>
                 {[0, 1, 2, 3].map((weekIndex) => (
-                  <td key={weekIndex} className="p-2 border border-gray-300 dark:border-gray-600">
+                  <td key={weekIndex} className="p-2">
                     <div className="relative flex items-center justify-center">
                       {operation === "Update Expenses" && (
                         <span className="absolute left-1 text-gray-500 dark:text-gray-400 text-sm">+</span>
@@ -177,7 +192,7 @@ const Expenses = () => {
                     </div>
                   </td>
                 ))}
-                <td className="p-2 border border-gray-300 dark:border-gray-600 font-semibold text-green-600 dark:text-green-400">
+                <td className="p-2 font-semibold text-green-600 dark:text-green-400">
                   ₹{calculateCategoryTotal(i)}
                 </td>
               </motion.tr>
@@ -201,6 +216,94 @@ const Expenses = () => {
         >
           {operation}
         </motion.button>
+      </motion.div>
+
+      {/* Budget Goal Setting */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.6 }}
+        className="mt-10 bg-gradient-to-r from-orange-100 via-orange-200 to-orange-100 dark:from-orange-900 dark:via-orange-800 dark:to-orange-900 p-6 rounded-xl shadow-lg"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-center text-orange-700 dark:text-orange-300">
+          🎯 Set Your Budget Goal
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="font-semibold">Month</label>
+            <select
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+              value={budgetMonth}
+              onChange={(e) => setBudgetMonth(e.target.value)}
+            >
+              <option value="">Choose Month</option>
+              {months.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="font-semibold">Total Monthly Budget (₹)</label>
+            <input
+              type="number"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+              value={budgetAmount}
+              onChange={(e) => setBudgetAmount(e.target.value)}
+              placeholder="Total Budget"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <h3 className="font-semibold mb-2">Category Allocations</h3>
+          <div className="grid md:grid-cols-2 gap-2">
+            {defaultCategories.map((cat, idx) => (
+              <div key={cat} className="flex flex-col md:flex-row md:items-center gap-2">
+                <span className="font-medium">{cat}</span>
+                <input
+                  type="number"
+                  placeholder="₹ amount"
+                  className="w-24 rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 dark:bg-gray-700 dark:text-gray-200"
+                  value={categoryAllocations[idx].amount}
+                  onChange={(e) => handleCategoryAllocationChange(idx, "amount", e.target.value)}
+                />
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  placeholder="Priority 1-5"
+                  className="w-24 rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 dark:bg-gray-700 dark:text-gray-200"
+                  value={categoryAllocations[idx].priority}
+                  onChange={(e) => handleCategoryAllocationChange(idx, "priority", e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label className="font-semibold">Saving Target (₹)</label>
+            <input
+              type="number"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+              value={savingTarget}
+              onChange={(e) => setSavingTarget(e.target.value)}
+              placeholder="Savings target"
+            />
+          </div>
+          <div>
+            <label className="font-semibold">Description (optional)</label>
+            <textarea
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe your budget plan..."
+            ></textarea>
+          </div>
+        </div>
       </motion.div>
     </motion.div>
   );

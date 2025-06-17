@@ -137,24 +137,24 @@ const Progress = () => {
         transition={{ delay: 0.4, duration: 0.5 }}
         className="relative max-w-7xl"
       >
-        <input
-          type="text"
-          className="w-full pr-20 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-6 text-sm bg-white dark:bg-gray-700 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          onKeyDown={handleKeyPress}
-          placeholder="Type your message..."
-          spellCheck={false}
-          autoComplete="off"
-        />
-        <motion.button
-          onClick={sendMessage}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="absolute top-[5px] right-2 bg-orange-600 dark:bg-orange-500 text-white px-4 text-sm rounded-md hover:bg-orange-500 dark:hover:bg-orange-400 "
-        >
-          Send
-        </motion.button>
+     <input
+  type="text"
+  className="w-full pr-20 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-3 text-sm bg-white dark:bg-gray-700 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+  value={question}
+  onChange={(e) => setQuestion(e.target.value)}
+  onKeyDown={handleKeyPress}
+  placeholder="Type your message..."
+  spellCheck={false}
+  autoComplete="off"
+/>
+<motion.button
+  onClick={sendMessage}
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  className="absolute top-1/2 -translate-y-1/2 right-2 bg-orange-600 dark:bg-orange-500 text-white px-4 text-sm rounded-md hover:bg-orange-500 dark:hover:bg-orange-400"
+>
+  Send
+</motion.button>
       </motion.div>
     </div>
   );
