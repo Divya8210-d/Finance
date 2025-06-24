@@ -205,22 +205,6 @@ export default function Transactions() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Payment Mode
-                </label>
-                <select
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
-                  value={mode}
-                  onChange={(e) => setMode(e.target.value)}
-                  required
-                >
-                  <option value="">Select Mode</option>
-                  <option value="Cash">Cash</option>
-                  <option value="Cashless">Cashless</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Date
                 </label>
                 <input
@@ -235,6 +219,21 @@ export default function Transactions() {
                   required
                 />
               </div>
+              <div>
+  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+    Payment Mode
+  </label>
+  <select
+    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
+    value={mode}
+    onChange={(e) => setMode(e.target.value)}
+    required
+  >
+    <option value="">Select Mode</option>
+    <option value="Cash">Cash</option>
+    <option value="Cashless">Cashless</option>
+  </select>
+</div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
