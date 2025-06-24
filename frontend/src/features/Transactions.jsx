@@ -20,7 +20,8 @@ export default function Transactions() {
   const [selectedDate, setSelectedDate] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const transactionsPerPage = 5;
+  const [mode, setMode] = useState("");
+  const transactionsPerPage = 10;
 
   function getWeekIndexAndMonth(dateInput) {
     const date = new Date(dateInput);
@@ -44,92 +45,98 @@ export default function Transactions() {
         { withCredentials: true }
       );
       setTransactions(res.data.data);
-      setCurrentPage(1); // Reset to first page on fetch
+      setCurrentPage(1);
     } catch (err) {
       toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
     }
   };
 
+  const loadRazorpayScript = () =>
+    new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
 
-
-
-
-
-const dopayment = async () => {
-  if(mode==Cash){
-     try {
+  const dopayment = async () => {
+    if (mode === "Cashless") {
       const res = await axios.post(
         "https://finanlytic.onrender.com/api/v1/payment/createorder",
-        
+        { amount: amount * 100 },
         { withCredentials: true }
       );
-  
-     const res2 = await axios.post(
-        "https://finanlytic.onrender.com/api/v1/payment/verifypay",
-        {  razorpay_order_id:res.data.data.razorpay_order_id,
-    razorpay_payment_id:res.data.data.razorpay_payment_id,
-    razorpay_signature:res.data.data.payment,
-    month,
-    category,
-    mode,       
-    amount,
-    date,       
-    weekIndex    
 
-        }
-        ,
-        { withCredentials: true }
-      );
-  
-toast.success("Payment done succesfully")
-       
-  } catch (er) {
-    toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
-  }
+      const order = res.data.data;
+      const razorpayLoaded = await loadRazorpayScript();
+      if (!razorpayLoaded) {
+        toast.error("Razorpay SDK failed to load");
+        return;
+      }
 
-
-  }
-  
-
-  else{
-
-try {
-   const res = await axios.post(
-        "https://finanlytic.onrender.com/api/v1/payment/cashpayment",
-        {
-            month,
-    category,
-    mode,       
-    amount,
-    date,       
-    weekIndex  
+      const options = {
+        key: "rzp_test_W5q6dvRFx7DDty",
+        amount: order.amount,
+        currency: "INR",
+        order_id: order.id,
+        name: "Finanlytic",
+        description: "Transaction",
+        handler: async (response) => {
+          try {
+            await axios.post(
+              "https://finanlytic.onrender.com/api/v1/payment/verifypay",
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                month,
+                category,
+                mode,
+                amount,
+                date: selectedDate,
+                weekIndex
+              },
+              { withCredentials: true }
+            );
+            toast.success("Payment verified successfully");
+            todayTransactions();
+          } catch (err) {
+            toast.error("Verification failed: " + (err.response?.data?.message || err.message));
+          }
         },
-        { withCredentials: true })
-} 
-catch (err) {
-toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
-}
+        theme: { color: "#3399cc" }
+      };
 
+      const rzp = new window.Razorpay(options);
+      rzp.open();
 
-  }
- 
-
-}
-
-
-
+    } else {
+      try {
+        await axios.post(
+          "https://finanlytic.onrender.com/api/v1/payment/cashpayment",
+          {
+            month,
+            category,
+            mode,
+            amount,
+            date: selectedDate,
+            weekIndex
+          },
+          { withCredentials: true }
+        );
+        toast.success("Cash transaction added successfully");
+        todayTransactions();
+      } catch (err) {
+        toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
+      }
+    }
+  };
 
   useEffect(() => {
     todayTransactions();
   }, []);
 
-
-
-
-
-
-
-  // Calculate paginated transactions
   const indexOfLast = currentPage * transactionsPerPage;
   const indexOfFirst = indexOfLast - transactionsPerPage;
   const currentTransactions = transactions.slice(indexOfFirst, indexOfLast);
@@ -145,7 +152,7 @@ toast.error("Something went wrong: " + (err.response?.data?.message || err.messa
           onClick={() => setShowForm(true)}
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded"
         >
-          ADD TRANSACTION
+          Update Transactions
         </button>
       </div>
 
@@ -181,7 +188,7 @@ toast.error("Something went wrong: " + (err.response?.data?.message || err.messa
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                                 dopayment();
+                dopayment();
                 setShowForm(false);
               }}
               className="space-y-4"
@@ -202,6 +209,22 @@ toast.error("Something went wrong: " + (err.response?.data?.message || err.messa
                       {cat}
                     </option>
                   ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Payment Mode
+                </label>
+                <select
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
+                  value={mode}
+                  onChange={(e) => setMode(e.target.value)}
+                  required
+                >
+                  <option value="">Select Mode</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Cashless">Cashless</option>
                 </select>
               </div>
 
@@ -256,14 +279,13 @@ toast.error("Something went wrong: " + (err.response?.data?.message || err.messa
               <th className="p-2 text-left">Category</th>
               <th className="p-2 text-left">Date</th>
               <th className="p-2 text-left">Payment Mode</th>
-              <th className="p-2 text-left">Description</th>
               <th className="p-2 text-left">Amount</th>
             </tr>
           </thead>
           <tbody>
             {currentTransactions.length === 0 ? (
               <tr>
-                <td colSpan="5" className="text-center p-4 text-gray-500">
+                <td colSpan="4" className="text-center p-4 text-gray-500">
                   No transactions found today.
                 </td>
               </tr>
@@ -273,7 +295,6 @@ toast.error("Something went wrong: " + (err.response?.data?.message || err.messa
                   <td className="p-2">{txn.category}</td>
                   <td className="p-2">{txn.date || "N/A"}</td>
                   <td className="p-2">{txn.paymentMode || "N/A"}</td>
-                  <td className="p-2">{txn.description || "N/A"}</td>
                   <td className={`p-2 ${txn.amount >= 0 ? "text-green-600" : "text-red-500"}`}>
                     ₹{txn.amount}
                   </td>
