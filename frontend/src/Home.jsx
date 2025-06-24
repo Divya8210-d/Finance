@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { ToastContainer } from "react-toastify";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import About from "./Mainpage/About";
 import Features from "./Mainpage/Features";
 import Footer from "./Mainpage/Footer";
@@ -11,49 +12,39 @@ import Navbar from "./Mainpage/Navbar";
 gsap.registerPlugin(ScrollTrigger);
 
 function Home() {
-  const aboutRef = useRef();
-  const featuresRef = useRef();
+  const sectionsRef = useRef([]);
 
   useEffect(() => {
-    // Pin About section
-    ScrollTrigger.create({
-      trigger: aboutRef.current,
-      start: "top top",
-      end: "+=500",  // How long it stays pinned (adjust as needed)
-      pin: true,
-      scrub: true,
-      markers: false // set true to debug
+    sectionsRef.current.forEach((section) => {
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        pin: true,
+        pinSpacing: false, // no extra space added below
+        scrub: true
+      });
     });
-
-    // Pin Features section (optional)
-    ScrollTrigger.create({
-      trigger: featuresRef.current,
-      start: "top top",
-      end: "+=500",
-      pin: true,
-      scrub: true,
-      markers: false
-    });
-
   }, []);
 
   return (
     <>
-      <main>
-        <ToastContainer position="top-center" />
-        <Navbar />
-        <Hero />
-        
-        <section ref={aboutRef}>
+      <ToastContainer position="top-center" />
+      <Navbar />
+
+      <div>
+        <section ref={el => sectionsRef.current[0] = el}>
+          <Hero />
+        </section>
+        <section ref={el => sectionsRef.current[1] = el}>
           <About />
         </section>
-
-        <section ref={featuresRef}>
+        <section ref={el => sectionsRef.current[2] = el}>
           <Features />
         </section>
-
-        <Footer />
-      </main>
+        <section ref={el => sectionsRef.current[3] = el}>
+          <Footer />
+        </section>
+      </div>
     </>
   );
 }
