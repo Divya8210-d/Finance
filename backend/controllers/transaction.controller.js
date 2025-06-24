@@ -1,156 +1,322 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
+import paidseal from "../Images/paidseal.png";
 
-import { ApiResponse } from "../utilss/ApiResponse.js";
-import asyncHandler from "../utilss/asynchandler.js";
-import { Spends } from "../models/spending.model.js";
-import Razorpay from "razorpay";
-import crypto from "crypto";
-import { Transaction } from "../models/transaction.model.js";
-import { ApiError } from "../utilss/ApiError.js";
-
-
-const razorpay = new Razorpay({
-  key_id:"rzp_test_W5q6dvRFx7DDty",
-  key_secret:"chjX8jr5CjsvwapgeZuSYkmd"
-});
-
-const createorder = asyncHandler(async (req, res) => {
-  const options = {
-    amount: req.body.amount,
-    currency: "INR",
-    receipt: "receipt_order_" + Date.now()
-  };
-
-  try {
-    const order = await razorpay.orders.create(options);
-    console.log("Razorpay Order", order);
-    res.status(200).json( new ApiResponse(200,order))
-  } catch (err) {
-    res.status(500).json( new ApiResponse(500,"Error occured"));
-  }
-}) 
-
-
-
-const verifyandsavepayment = asyncHandler(async (req, res) => {
-  const {
-    razorpay_order_id,
-    razorpay_payment_id,
-    razorpay_signature,
-    month,
-    category,
-    mode,       
-    amount,
-    date,       
-    weekIndex       
-  } = req.body;
-
-  const expectedSignature = crypto
-    .createHmac("sha256","chjX8jr5CjsvwapgeZuSYkmd")
-    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-    .digest("hex");
-
-  if (expectedSignature !== razorpay_signature) {
-    return res.status(400).json(new  ApiResponse(400, "Invalid signature"));
-  }
-
-
-  const validCategories =[
+const defaultCategories = [
   'Groceries', 'Rents', 'Bills', 'Shoppings',
   'Chilling', 'Vehicles', 'Fees', 'Personal',
   'Recharge', 'Others'
 ];
 
+export default function Transactions() {
+  const [amount, setAmount] = useState(0);
+  const [category, setCategory] = useState("");
+  const [weekIndex, setWeek] = useState(0);
+  const [month, setMonth] = useState("");
+  const [transactions, setTransactions] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [mode, setMode] = useState("");
+  const transactionsPerPage = 10;
 
-  if (!validCategories.includes(category)) {
-    return res.status(400).json(new ApiResponse(400, "Invalid category"));
+  function getWeekIndexAndMonth(dateInput) {
+    const date = new Date(dateInput);
+    const dayOfMonth = date.getDate();
+    const month = date.toLocaleString("default", { month: "long" });
+
+    let weekIndex = 0;
+    if (dayOfMonth > 7 && dayOfMonth <= 14) weekIndex = 1;
+    else if (dayOfMonth > 14 && dayOfMonth <= 21) weekIndex = 2;
+    else if (dayOfMonth > 21) weekIndex = 3;
+
+    return { weekIndex, month };
   }
 
-  
-  if (weekIndex < 0 || weekIndex > 3) {
-    return res.status(400).json(new ApiResponse(400, "Invalid week index"));
+  const todayTransactions = async () => {
+    const today = new Date().toISOString().split("T")[0];
+    try {
+      const res = await axios.post(
+        "https://finanlytic.onrender.com/api/v1/payment/transactions",
+        { date: today },
+        { withCredentials: true }
+      );
+      setTransactions(res.data.data);
+      setCurrentPage(1);
+    } catch (err) {
+      toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
+    }
+  };
+
+ const dopayment = async () => {
+  if (mode === "Cashless") {
+    try {
+      const res = await axios.post(
+        "https://finanlytic.onrender.com/api/v1/payment/createorder",
+        { amount },
+        { withCredentials: true }
+      );
+
+      const { id: razorpay_order_id } = res.data.data;
+
+      const options = {
+        key: "rzp_test_W5q6dvRFx7DDty",
+        amount: amount * 100, // Razorpay expects paise
+        currency: "INR",
+        name: "Finanlytic",
+        description: "Test Transaction",
+        order_id: razorpay_order_id,
+        handler: async function (response) {
+          const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
+
+          await axios.post(
+            "https://finanlytic.onrender.com/api/v1/payment/verifypay",
+            {
+              razorpay_order_id,
+              razorpay_payment_id,
+              razorpay_signature,
+              month,
+              category,
+              mode,
+              amount,
+              date: selectedDate,
+              weekIndex
+            },
+            { withCredentials: true }
+          );
+
+          toast.success("Payment done successfully");
+          todayTransactions();
+        },
+        theme: {
+          color: "#3399cc"
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+    } catch (err) {
+      toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
+    }
+  } else {
+    try {
+      await axios.post(
+        "https://finanlytic.onrender.com/api/v1/payment/cashpayment",
+        {
+          month,
+          category,
+          mode,
+          amount,
+          date: selectedDate,
+          weekIndex
+        },
+        { withCredentials: true }
+      );
+      toast.success("Cash transaction added successfully");
+      todayTransactions();
+    } catch (err) {
+      toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
+    }
   }
+};
 
-  const spendingDoc = await Spends.findOne({user:req.user.email ,month})
-  const transactionDoc =await Transaction.findOne({user:req.user.email ,amount,mode,category,date})
-    if (transactionDoc) {
-    return res.status(404).json(new ApiResponse(404, "Payment has already being done"));
-  }
+  useEffect(() => {
+    todayTransactions();
+  }, []);
 
-  if (!spendingDoc) {
-    return res.status(404).json(new ApiResponse(404, "Spending record not found"));
-  }
+  const indexOfLast = currentPage * transactionsPerPage;
+  const indexOfFirst = indexOfLast - transactionsPerPage;
+  const currentTransactions = transactions.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(transactions.length / transactionsPerPage);
 
-const transaction = await  Transaction.create({
-    user:req.user.email,
-    category:category,
-    mode:mode,
-    amount:amount,
-    dateofpurchase:new Date(date)
+  return (
+    <div className="min-h-screen bg-gray-50 p-6 font-inter relative">
+      <ToastContainer position="top-center" autoClose={3000} />
 
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">All Transactions</h1>
+        <button
+          onClick={() => setShowForm(true)}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded"
+        >
+          Update Transactions
+        </button>
+      </div>
 
-})
+      {showForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg relative"
+          >
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-white"
+            >
+              ✕
+            </button>
 
+            <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+                Add Transaction
+              </h1>
+              <motion.img
+                src={paidseal}
+                alt="Paid Seal"
+                className="h-16 w-16 mt-2 sm:mt-0"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              />
+            </div>
 
-const parsedAmount = parseFloat(amount);
-if (isNaN(parsedAmount) || parsedAmount <= 0) {
-  return res.status(400).json(new ApiResponse(400, "Invalid amount"));
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                dopayment();
+                setShowForm(false);
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Category
+                </label>
+                <select
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {defaultCategories.map((cat, idx) => (
+                    <option key={idx} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Payment Mode
+                </label>
+                <select
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
+                  value={mode}
+                  onChange={(e) => setMode(e.target.value)}
+                  required
+                >
+                  <option value="">Select Mode</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Cashless">Cashless</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
+                  onChange={(e) => {
+                    const { weekIndex, month } = getWeekIndexAndMonth(e.target.value);
+                    setMonth(month);
+                    setWeek(weekIndex);
+                    setSelectedDate(e.target.value);
+                  }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Amount (₹)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Amount"
+                  min={1}
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded shadow-sm dark:bg-gray-700 dark:text-white"
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                />
+              </div>
+
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                type="submit"
+                className="w-full bg-orange-500 text-white py-2 rounded font-semibold hover:bg-orange-600 transition"
+              >
+                Pay
+              </motion.button>
+            </form>
+          </motion.div>
+        </div>
+      )}
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border rounded shadow-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-2 text-left">Category</th>
+              <th className="p-2 text-left">Date</th>
+              <th className="p-2 text-left">Payment Mode</th>
+              <th className="p-2 text-left">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentTransactions.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="text-center p-4 text-gray-500">
+                  No transactions found today.
+                </td>
+              </tr>
+            ) : (
+              currentTransactions.map((txn, idx) => (
+                <tr key={idx} className="border-t hover:bg-gray-50">
+                  <td className="p-2">{txn.category}</td>
+                  <td className="p-2">{txn.date || "N/A"}</td>
+                  <td className="p-2">{txn.paymentMode || "N/A"}</td>
+                  <td className={`p-2 ${txn.amount >= 0 ? "text-green-600" : "text-red-500"}`}>
+                    ₹{txn.amount}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {transactions.length > transactionsPerPage && (
+        <div className="flex justify-center mt-4 space-x-2">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="px-3 py-1">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
-
-  spendingDoc[category].weekly[weekIndex] += parsedAmount;
-  spendingDoc[category].monthlyTotal += parsedAmount;
-
-  await spendingDoc.save();
-
-  res.status(200).json(new ApiResponse(200, "Payment verified and spending updated"));
-});
-
-
-
-const recenttransactions = asyncHandler(async (req, res) => {
-  const { date } = req.body;
-
-  if (!date) {
-    throw new ApiError(400, "Date is required");
-  }
-
-  // Create start and end date for the full day
-  const start = new Date(date);
-  start.setHours(0, 0, 0, 0);
-
-  const end = new Date(date);
-  end.setHours(23, 59, 59, 999);
-
-  const transactions = await Transaction.find({
-    user: req.user.email,
-    dateofpurchase: {
-      $gte: start,
-      $lte: end,
-    },
-  });
-
-  return res.status(200).json(new ApiResponse(200, transactions, "Transactions Fetched"));
-});
-
-
-
-
-const alltransactions   = asyncHandler(async (req,res) => {
-
-
-
-  const transacDoc = await Transaction.find({
-    user:req.user.email
-  })
-
-if(!transacDoc){
-  throw new ApiError(500,"No Transactions Available for this user")
-}
-
-return res.status(200).json(new ApiResponse(200,transacDoc,"Transactions Fetched"))
-
-  
-})
-
-
-
-export {createorder,verifyandsavepayment ,recenttransactions, alltransactions}

@@ -61,8 +61,8 @@ export default function Sidebar({ collapsed, toggleCollapse, profile, username }
   };
 
   const menuItems = [
-    { icon: <FiDollarSign />, label: "Expenses", name: "Update Expenses" },
-    { icon: <GiTakeMyMoney />, label: "Transactions", name: "Transactions" },
+    { icon: <FiDollarSign />, label: "Expenses", name: "Budgets & Expenses" },
+    { icon: <GiTakeMyMoney />, label: "Transactions", name: "Payments & Transactions" },
     { icon: <FiBarChart />, label: "Insights", name: "Expenses Insights" },
     { icon: <FiAward />, label: "Progress", name: "Your Progress" },
     { icon: <FiGlobe />, label: "Tips", name: "Investment Tips" },

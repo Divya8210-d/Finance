@@ -50,9 +50,84 @@ export default function Transactions() {
     }
   };
 
+
+
+
+
+
+const dopayment = async () => {
+  if(mode==Cash){
+     try {
+      const res = await axios.post(
+        "https://finanlytic.onrender.com/api/v1/payment/createorder",
+        
+        { withCredentials: true }
+      );
+  
+     const res2 = await axios.post(
+        "https://finanlytic.onrender.com/api/v1/payment/verifypay",
+        {  razorpay_order_id:res.data.data.razorpay_order_id,
+    razorpay_payment_id:res.data.data.razorpay_payment_id,
+    razorpay_signature:res.data.data.payment,
+    month,
+    category,
+    mode,       
+    amount,
+    date,       
+    weekIndex    
+
+        }
+        ,
+        { withCredentials: true }
+      );
+  
+toast.success("Payment done succesfully")
+       
+  } catch (er) {
+    toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
+  }
+
+
+  }
+  
+
+  else{
+
+try {
+   const res = await axios.post(
+        "https://finanlytic.onrender.com/api/v1/payment/cashpayment",
+        {
+            month,
+    category,
+    mode,       
+    amount,
+    date,       
+    weekIndex  
+        },
+        { withCredentials: true })
+} 
+catch (err) {
+toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
+}
+
+
+  }
+ 
+
+}
+
+
+
+
   useEffect(() => {
     todayTransactions();
   }, []);
+
+
+
+
+
+
 
   // Calculate paginated transactions
   const indexOfLast = currentPage * transactionsPerPage;
@@ -106,7 +181,7 @@ export default function Transactions() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                toast.info("Payment handler not implemented!");
+                                 dopayment();
                 setShowForm(false);
               }}
               className="space-y-4"
