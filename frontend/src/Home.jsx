@@ -41,7 +41,7 @@ function Home() {
         <section ref={el => sectionsRef.current[2] = el}>
           <Features />
         </section>
-        <section ref={el => sectionsRef.current[3] = el}>
+        <section >
           <Footer />
         </section>
       </div>

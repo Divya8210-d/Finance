@@ -27,10 +27,15 @@ const Expenses = () => {
   const [budgetMonth, setBudgetMonth] = useState("");
   const [budgetAmount, setBudgetAmount] = useState("");
   const [categoryAllocations, setCategoryAllocations] = useState(
-    defaultCategories.map(() => ({ amount: "", priority: 3 }))
+    defaultCategories.map(() => ({ amount: "", priority: 0 }))
   );
   const [savingTarget, setSavingTarget] = useState("");
   const [description, setDescription] = useState("");
+
+  // Income Bifurcation States
+  const [cash, setCash] = useState("");
+  const [cashless, setCashless] = useState("");
+  const [assets, setAssets] = useState("");
 
   const handleExpenseChange = (categoryIndex, weekIndex, value) => {
     const newExpenses = [...expenses];
@@ -102,17 +107,11 @@ const Expenses = () => {
       </h1>
 
       {/* Input Controls */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-        className="grid md:grid-cols-3 gap-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-gray-700 mb-6 w-full"
-      >
-        {/* Operation */}
+      <div className="grid md:grid-cols-3 gap-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-gray-700 mb-6 w-full">
         <div>
           <label className="block mb-1 font-semibold">Changes</label>
           <select
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-700 dark:text-gray-200"
+            className="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
             value={operation}
             onChange={(e) => setOperation(e.target.value)}
           >
@@ -120,12 +119,10 @@ const Expenses = () => {
             <option value="Update Expenses">Update Expenses</option>
           </select>
         </div>
-
-        {/* Month */}
         <div>
           <label className="block mb-1 font-semibold">Select Month</label>
           <select
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-700 dark:text-gray-200"
+            className="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
             value={month}
             onChange={(e) => setMonth(e.target.value)}
           >
@@ -135,27 +132,20 @@ const Expenses = () => {
             ))}
           </select>
         </div>
-
-        {/* Income */}
         <div>
           <label className="block mb-1 font-semibold">Monthly Income (₹)</label>
           <input
             type="number"
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-700 dark:text-gray-200"
+            className="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
             value={income}
             onChange={(e) => setIncome(e.target.value)}
             placeholder="Your Income"
           />
         </div>
-      </motion.div>
+      </div>
 
       {/* Expenses Table */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-        className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-700 w-full"
-      >
+      <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-700 w-full">
         <table className="min-w-full text-sm text-center">
           <thead className="bg-orange-100 dark:bg-orange-800 text-gray-900 dark:text-orange-100 text-base">
             <tr>
@@ -169,45 +159,29 @@ const Expenses = () => {
           </thead>
           <tbody className="text-gray-700 dark:text-gray-300">
             {defaultCategories.map((category, i) => (
-              <motion.tr
-                key={category}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="hover:bg-orange-50 dark:hover:bg-orange-900"
-              >
+              <tr key={category} className="hover:bg-orange-50 dark:hover:bg-orange-900">
                 <td className="p-3 font-medium">{category}</td>
                 {[0, 1, 2, 3].map((weekIndex) => (
                   <td key={weekIndex} className="p-2">
-                    <div className="relative flex items-center justify-center">
-                      {operation === "Update Expenses" && (
-                        <span className="absolute left-1 text-gray-500 dark:text-gray-400 text-sm">+</span>
-                      )}
-                      <input
-                        type="number"
-                        className={`w-20 text-center border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 focus:ring-1 focus:ring-orange-400 dark:bg-gray-700 dark:text-gray-200 ${operation === "Update Expenses" ? "pl-4" : ""}`}
-                        value={expenses[i][weekIndex]}
-                        onChange={(e) => handleExpenseChange(i, weekIndex, e.target.value)}
-                      />
-                    </div>
+                    <input
+                      type="number"
+                      className="w-20 text-center border rounded-md px-2 py-1 dark:bg-gray-700 dark:text-gray-200"
+                      value={expenses[i][weekIndex]}
+                      onChange={(e) => handleExpenseChange(i, weekIndex, e.target.value)}
+                    />
                   </td>
                 ))}
                 <td className="p-2 font-semibold text-green-600 dark:text-green-400">
                   ₹{calculateCategoryTotal(i)}
                 </td>
-              </motion.tr>
+              </tr>
             ))}
           </tbody>
         </table>
-      </motion.div>
+      </div>
 
       {/* Submit Button */}
-      <motion.div
-        className="text-center mt-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
-      >
+      <div className="text-center mt-8">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -216,95 +190,160 @@ const Expenses = () => {
         >
           {operation}
         </motion.button>
-      </motion.div>
+      </div>
 
+      {/* Include budget goal and bifurcation sections */}
+      {/* Paste the modified budget and bifurcation JSX from the previous answer here */}
       {/* Budget Goal Setting */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.6 }}
-        className="mt-10 bg-gradient-to-r from-orange-100 via-orange-200 to-orange-100 dark:from-orange-900 dark:via-orange-800 dark:to-orange-900 p-6 rounded-xl shadow-lg"
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.8, duration: 0.6 }}
+  className="mt-10 bg-gradient-to-r from-orange-100 via-orange-200 to-orange-100 dark:from-orange-900 dark:via-orange-800 dark:to-orange-900 p-6 rounded-xl shadow-lg"
+>
+  <h2 className="text-2xl font-bold mb-4 text-center text-orange-700 dark:text-orange-300">
+    🎯 Set Your Budget Goal
+  </h2>
+
+  <div className="grid md:grid-cols-2 gap-4">
+    <div>
+      <label className="font-semibold">Month</label>
+      <select
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        value={budgetMonth}
+        onChange={(e) => setBudgetMonth(e.target.value)}
       >
-        <h2 className="text-2xl font-bold mb-4 text-center text-orange-700 dark:text-orange-300">
-          🎯 Set Your Budget Goal
-        </h2>
+        <option value="">Choose Month</option>
+        {months.map((m) => (
+          <option key={m} value={m}>{m}</option>
+        ))}
+      </select>
+    </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="font-semibold">Month</label>
-            <select
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
-              value={budgetMonth}
-              onChange={(e) => setBudgetMonth(e.target.value)}
-            >
-              <option value="">Choose Month</option>
-              {months.map((m) => (
-                <option key={m} value={m}>{m}</option>
-              ))}
-            </select>
-          </div>
+    <div>
+      <label className="font-semibold">Total Monthly Budget (₹)</label>
+      <input
+        type="number"
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        value={budgetAmount}
+        onChange={(e) => setBudgetAmount(e.target.value)}
+        placeholder="Total Budget"
+      />
+    </div>
+  </div>
 
-          <div>
-            <label className="font-semibold">Total Monthly Budget (₹)</label>
-            <input
-              type="number"
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
-              value={budgetAmount}
-              onChange={(e) => setBudgetAmount(e.target.value)}
-              placeholder="Total Budget"
-            />
-          </div>
+  {/* Category Allocations */}
+  <div className="mt-6">
+    <h3 className="font-semibold mb-3 text-lg">Category Allocations</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {defaultCategories.map((cat, idx) => (
+        <div key={cat} className="flex flex-wrap items-center gap-3">
+          <span className="w-28 font-medium">{cat}</span>
+          <input
+            type="number"
+            placeholder="₹ Amount"
+            className="w-32 rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 dark:bg-gray-700 dark:text-gray-200"
+            value={categoryAllocations[idx].amount}
+            onChange={(e) => handleCategoryAllocationChange(idx, "amount", e.target.value)}
+          />
+          <input
+            type="number"
+            min="1"
+            max="5"
+            placeholder="Priority"
+            className="w-28 rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 dark:bg-gray-700 dark:text-gray-200"
+            value={categoryAllocations[idx].priority}
+            onChange={(e) => handleCategoryAllocationChange(idx, "priority", e.target.value)}
+          />
         </div>
+      ))}
+    </div>
+  </div>
 
-        <div className="mt-4">
-          <h3 className="font-semibold mb-2">Category Allocations</h3>
-          <div className="grid md:grid-cols-2 gap-2">
-            {defaultCategories.map((cat, idx) => (
-              <div key={cat} className="flex flex-col md:flex-row md:items-center gap-2">
-                <span className="font-medium">{cat}</span>
-                <input
-                  type="number"
-                  placeholder="₹ amount"
-                  className="w-24 rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 dark:bg-gray-700 dark:text-gray-200"
-                  value={categoryAllocations[idx].amount}
-                  onChange={(e) => handleCategoryAllocationChange(idx, "amount", e.target.value)}
-                />
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  placeholder="Priority 1-5"
-                  className="w-24 rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 dark:bg-gray-700 dark:text-gray-200"
-                  value={categoryAllocations[idx].priority}
-                  onChange={(e) => handleCategoryAllocationChange(idx, "priority", e.target.value)}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+  {/* Savings and Description */}
+  <div className="grid md:grid-cols-2 gap-4 mt-6">
+    <div>
+      <label className="font-semibold">Saving Target (₹)</label>
+      <input
+        type="number"
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        value={savingTarget}
+        onChange={(e) => setSavingTarget(e.target.value)}
+        placeholder="Savings target"
+      />
+    </div>
+    <div>
+      <label className="font-semibold">Description (optional)</label>
+      <textarea
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Describe your budget plan..."
+      ></textarea>
+    </div>
+  </div>
 
-        <div className="grid md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className="font-semibold">Saving Target (₹)</label>
-            <input
-              type="number"
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
-              value={savingTarget}
-              onChange={(e) => setSavingTarget(e.target.value)}
-              placeholder="Savings target"
-            />
-          </div>
-          <div>
-            <label className="font-semibold">Description (optional)</label>
-            <textarea
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your budget plan..."
-            ></textarea>
-          </div>
-        </div>
-      </motion.div>
+  {/* Set Budget Button */}
+  <div className="text-center mt-6">
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md dark:shadow-green-700"
+    >
+      Set Budget
+    </motion.button>
+  </div>
+</motion.div>
+
+{/* Monthly Income Bifurcation */}
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 1.1, duration: 0.6 }}
+  className="mt-10 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg dark:shadow-gray-700"
+>
+  <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-gray-200">
+    💰 Income Bifurcation
+  </h2>
+
+  <div className="grid md:grid-cols-3 gap-6">
+    <div>
+      <label className="font-semibold">Cash (₹)</label>
+      <input
+        type="number"
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        placeholder="Cash amount"
+      />
+    </div>
+    <div>
+      <label className="font-semibold">Cashless (UPI/Card) (₹)</label>
+      <input
+        type="number"
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        placeholder="Cashless amount"
+      />
+    </div>
+    <div>
+      <label className="font-semibold">Other Assets (₹)</label>
+      <input
+        type="number"
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        placeholder="Other assets"
+      />
+    </div>
+  </div>
+
+  <div className="text-center mt-6">
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md dark:shadow-blue-700"
+    >
+      Submit Bifurcation
+    </motion.button>
+  </div>
+</motion.div>
+
     </motion.div>
   );
 };
