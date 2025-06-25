@@ -41,7 +41,7 @@ export default function Features() {
       whileInView={{ backgroundPosition: "0% 0%" }}
       transition={{ duration: 2, ease: "easeOut" }}
       viewport={{ once: true }}
-      className="min-h-[600px] py-20 px-6 text-white bg-gradient-to-l from-orange-400 to-orange-600 bg-[length:200%_200%] bg-left"
+      className="min-h-[700px] py-20 px-6 text-white bg-gradient-to-l from-orange-400 to-orange-600 bg-[length:200%_200%] bg-left"
     >
       <div className="max-w-6xl mx-auto text-center mb-16">
         <p className="text-4xl font-bold">Explore Features in Our App</p>

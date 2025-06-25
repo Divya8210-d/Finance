@@ -17,7 +17,7 @@ export default function About() {
   };
 
   return (<section id="about">
-    <main className="min-h-[600px] bg-gradient-to-r from-orange-100 to-orange-300 px-6 md:px-16 py-16 text-orange-900">
+    <main className="min-h-[700px] bg-gradient-to-r from-orange-100 to-orange-300 px-6 md:px-16 py-16 text-orange-900">
       {/* Heading */}
       <motion.h2
         initial={{ opacity: 0, y: -30 }}
