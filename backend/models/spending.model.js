@@ -14,6 +14,26 @@ monthlyincome:{
     type:Number,
     required:true
 },
+cashinhand:{
+  tyep:Number,
+  required:true,
+},
+cash:{
+    type:Number,
+    required:true
+},
+cashless:{
+    type:Number,
+    required:true
+},
+assests:{
+    type:Number,
+    required:true
+},
+
+
+
+
 //expenses
 
 Groceries:{

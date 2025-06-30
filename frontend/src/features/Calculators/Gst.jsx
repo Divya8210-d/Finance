@@ -12,7 +12,7 @@ export default function Gst({ onClose }) {
     const Data = { amount, gstrate, type };
 
     try {
-      const res = await axios.post("http://localhost:5000/api/v1/dasboard/gst", Data, {
+      const res = await axios.post("https://finanlytic.onrender.com/api/v1/dasboard/gst", Data, {
         withCredentials: true,
       });
       const result = res.data?.data;

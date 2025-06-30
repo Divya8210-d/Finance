@@ -13,7 +13,7 @@ export default function FD({ onClose }) {
     const Data = { principalamount, rate, tenure, compounded };
 
     try {
-      const res = await axios.post("http://localhost:5000/api/v1/dashboard/fd", Data, {
+      const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/fd", Data, {
         withCredentials: true,
       });
       const result = res.data?.data?.maturedAmount;

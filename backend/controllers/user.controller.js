@@ -151,6 +151,11 @@ const login = asyncHandler(async (req, res) => {
 
     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id) //curley bracket use karke jo return karega wo hum log aise lesakte hain .karke bhi lesakte hain lekin isko destructuing bolte hain
 
+      user.refreshToken = refreshToken;
+await user.save(); // persist refresh token
+
+
+
     const loggedUser = await User.findById(user._id).select("-password -refreshToken")
 
     const options = {      //jab bhi cookie bhejna ho yeh important hai or fixed hai format

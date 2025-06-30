@@ -140,7 +140,6 @@ export default function DebtTracker() {
                 debts.map((debt, index) => (
                   <motion.tr
                     key={index}
-                    whileHover={{ scale: 1.02 }}
                     className="bg-white"
                   >
                     <td className="p-2">

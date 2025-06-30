@@ -183,13 +183,12 @@ const removeDebt = asyncHandler(async (req, res) => { //important concept sikhe 
   }
 
   // Find the subdocument by ID and remove it
-  const subDebt = debt.debts.id(id);
+  const subDebt = debt.debts;
 
-  if (!subDebt) {
-    throw new ApiError(404, "Debt not found");
-  }
+  subDebt =  await subDebt.filter((d)=>
+  d._id!=id
 
-  subDebt.remove();
+)
 
   // Save the parent document after removing the subdocument
   await debt.save();

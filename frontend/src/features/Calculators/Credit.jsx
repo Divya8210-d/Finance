@@ -23,7 +23,7 @@ export default function Credit({ onClose }) {
     };
 
     try {
-      const res = await axios.post("http://localhost:5000/api/v1/dashboard/credit", Data, {
+      const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/credit", Data, {
         withCredentials: true,
       });
 

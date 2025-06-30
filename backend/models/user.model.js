@@ -21,7 +21,11 @@ const userSchema = new Schema({
     },
     profile:{
         type:String
-    }
+    },
+    refreshToken: {
+  type: String
+}
+
 })
 
 
