@@ -23,6 +23,7 @@ const Expenses = () => {
   );
   const [operation, setOperation] = useState("Add Expenses");
 
+  
   // Budget Goal States
   const [budgetMonth, setBudgetMonth] = useState("");
   const [budgetAmount, setBudgetAmount] = useState("");
@@ -36,6 +37,7 @@ const Expenses = () => {
   const [cash, setCash] = useState("");
   const [cashless, setCashless] = useState("");
   const [assets, setAssets] = useState("");
+    const [cashinhand,setCashinHand] = useState();
 
   const handleExpenseChange = (categoryIndex, weekIndex, value) => {
     const newExpenses = [...expenses];
@@ -74,6 +76,10 @@ const Expenses = () => {
 
     const expenseData = {
       month,
+      cashinhand,
+      cash,
+      cashless,
+      assets,
       monthlyincome: Number(income),
       ...categoryFields,
     };
@@ -93,6 +99,35 @@ const Expenses = () => {
       toast.error(message);
     }
   };
+
+
+const budgetsave = async () => {
+
+   try {
+     const budget ={
+       savingtarget:savingTarget ,
+     monthlybudget:budgetAmount,
+      description,
+     month:  budgetMonth,
+     ...categoryAllocations
+     
+     }
+    
+     axios.post("https://finanlytic.onrender.com/api/v1/dashboard/setbudget",budget,{withCredentials:true})
+ toast.success("Budget is saved");
+
+   } catch (error) {
+    const message =
+        err.response?.data?.message || "Something went wrong";
+      toast.error(message);
+   }
+
+
+  
+}
+
+
+
 
   return (
     <motion.div
@@ -144,6 +179,79 @@ const Expenses = () => {
         </div>
       </div>
 
+     {/*income bifurcation */}
+
+     
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 1.1, duration: 0.6 }}
+  className="mt-10 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg dark:shadow-gray-700"
+>
+  <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-gray-200">
+    💰 Income Bifurcation
+  </h2>
+
+  <div className="grid md:grid-cols-3 gap-6">
+   <div>
+      <label className="font-semibold">CashinHand (₹)</label>
+      <input
+        type="number"
+        value={cashinhand}
+        onChange={(e)=>{
+                 setCashinHand(e.target.value);
+        }}
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        placeholder="Cash amount"
+      />
+    </div>
+    <div>
+      <label className="font-semibold">Cash (₹)</label>
+      <input
+        type="number"
+          value={cash}
+        onChange={(e)=>{
+                 setCash(e.target.value);
+        }}
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        placeholder="Cash amount"
+      />
+    </div>
+    <div>
+      <label className="font-semibold">Cashless (UPI/Card) (₹)</label>
+      <input
+        type="number"
+          value={cashless}
+        onChange={(e)=>{
+                 setCashless(e.target.value);
+        }}
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        placeholder="Cashless amount"
+      />
+    </div>
+    <div>
+      <label className="font-semibold">Other Assets (₹)</label>
+      <input
+        type="number"
+          value={assets}
+        onChange={(e)=>{
+                 setAssets(e.target.value);
+        }}
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
+        placeholder="Other assets"
+      />
+    </div>
+  </div>
+
+
+</motion.div>
+
+
+
+
+
+
+
       {/* Expenses Table */}
       <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-700 w-full">
         <table className="min-w-full text-sm text-center">
@@ -191,6 +299,10 @@ const Expenses = () => {
           {operation}
         </motion.button>
       </div>
+
+
+
+
 
       {/* Include budget goal and bifurcation sections */}
       {/* Paste the modified budget and bifurcation JSX from the previous answer here */}
@@ -288,6 +400,7 @@ const Expenses = () => {
     <motion.button
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
+      onClick={budgetsave}
       className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md dark:shadow-green-700"
     >
       Set Budget
@@ -296,53 +409,6 @@ const Expenses = () => {
 </motion.div>
 
 {/* Monthly Income Bifurcation */}
-<motion.div
-  initial={{ opacity: 0, y: 30 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 1.1, duration: 0.6 }}
-  className="mt-10 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg dark:shadow-gray-700"
->
-  <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-gray-200">
-    💰 Income Bifurcation
-  </h2>
-
-  <div className="grid md:grid-cols-3 gap-6">
-    <div>
-      <label className="font-semibold">Cash (₹)</label>
-      <input
-        type="number"
-        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
-        placeholder="Cash amount"
-      />
-    </div>
-    <div>
-      <label className="font-semibold">Cashless (UPI/Card) (₹)</label>
-      <input
-        type="number"
-        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
-        placeholder="Cashless amount"
-      />
-    </div>
-    <div>
-      <label className="font-semibold">Other Assets (₹)</label>
-      <input
-        type="number"
-        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 dark:bg-gray-700 dark:text-gray-200"
-        placeholder="Other assets"
-      />
-    </div>
-  </div>
-
-  <div className="text-center mt-6">
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md dark:shadow-blue-700"
-    >
-      Submit Bifurcation
-    </motion.button>
-  </div>
-</motion.div>
 
     </motion.div>
   );

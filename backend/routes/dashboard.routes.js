@@ -6,6 +6,7 @@ import { adddebt ,filtereddebts,getDebt,removeDebt,updatedebt } from '../control
 import { gst , emi,fdmatureamount,creditCardPayoff } from '../controllers/calculator.controller.js';
 import { track } from '../controllers/progress.controller.js';
 import { saving, spendingtrends, weeklytrend } from '../controllers/insights.controller.js';
+import { setbudget } from '../controllers/budget.controller.js';
 
 
 
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.post("/expenses",verify, addexpense);
 router.post("/updateexpenses", verify, updateexpense);
+router.post("/setbudget", verify, setbudget);
 router.post("/tips", verify, givetips);
 router.post("/track",verify,track);
 router.post("/adddebt",verify, adddebt);

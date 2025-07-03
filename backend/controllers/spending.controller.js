@@ -9,7 +9,7 @@ import { ApiResponse } from "../utilss/ApiResponse.js";
 const addexpense = asyncHandler(async (req,res) => {
     
 
-const {month,monthlyincome,Groceries,Rents,Bills,Shoppings,Chilling,Vehicles,Fees,Personal,Recharge,Others}
+const {month,monthlyincome,cashinhand,cash,cashless,assests,Groceries,Rents,Bills,Shoppings,Chilling,Vehicles,Fees,Personal,Recharge,Others}
 =req.body;
 console.log("Incoming Expense Data:", req.body);
 
@@ -25,7 +25,7 @@ if(expense){
 
 
 //baaki fieLd ka validation hum frontend me dekh lenge
- const add = await Spends.create({ user:req.user.email,month,
+ const add = await Spends.create({ user:req.user.email,month,cashinhand,cash,cashless,assests,
 monthlyincome,Groceries,Rents,Bills,Shoppings,Chilling,Vehicles,Fees,Personal,Recharge,Others
  })
 
@@ -38,7 +38,10 @@ return res.status(200).json(new ApiResponse(200,{user:req.user.fullname,add},"Ex
 
 const updateexpense = asyncHandler(async (req, res) => {
   const {
-    month,
+    month,cashinhand,
+    cash,
+    cashless,
+    assests,
     monthlyincome,
     Groceries,
     Rents,

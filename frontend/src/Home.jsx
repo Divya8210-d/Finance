@@ -12,19 +12,9 @@ import Navbar from "./Mainpage/Navbar";
 gsap.registerPlugin(ScrollTrigger);
 
 function Home() {
-  const sectionsRef = useRef([]);
+  
 
-  useEffect(() => {
-    sectionsRef.current.forEach((section) => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        pin: true,
-        pinSpacing: false, // no extra space added below
-        scrub: true
-      });
-    });
-  }, []);
+
 
   return (
     <>
@@ -32,13 +22,13 @@ function Home() {
       <Navbar />
 
       <div>
-        <section ref={el => sectionsRef.current[0] = el}>
+        <section>
           <Hero />
         </section>
-        <section ref={el => sectionsRef.current[1] = el}>
+        <section >
           <About />
         </section>
-        <section ref={el => sectionsRef.current[2] = el}>
+        <section >
           <Features />
         </section>
       
