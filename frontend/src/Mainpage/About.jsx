@@ -20,7 +20,7 @@ export default function About() {
           trigger: el,
           start: 'top 80%',
           end: 'top 60%',
-          toggleActions: 'play none none reverse',
+          
         },
       });
     });

@@ -33,7 +33,7 @@ export default function Hero() {
           end: "top 0%",
           scrub: 2,
           pin: false,
-          markers: true, // remove in production
+          
         },
       }
     );

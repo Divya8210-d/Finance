@@ -15,7 +15,7 @@ monthlyincome:{
     required:true
 },
 cashinhand:{
-  tyep:Number,
+  type:Number,
   required:true,
 },
 cash:{
