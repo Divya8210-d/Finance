@@ -20,6 +20,16 @@ export default function Hero() {
         duration: 1.4,
         ease: 'power3.out',
         delay: 0.2,
+            scrollTrigger: {
+        trigger: section,
+        scroller:"body",
+        start: "top 0%",
+        end:"top -100%" ,
+        scrub: 2,
+        pin: true,
+
+        markers: true, // remove in production
+      }
       }
     );
 

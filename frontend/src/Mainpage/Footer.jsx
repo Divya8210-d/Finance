@@ -1,5 +1,8 @@
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useRef } from "react";
+import { useEffect } from "react";
+import gsap from "gsap";
 
 export default function Footer() {
 
@@ -13,9 +16,31 @@ export default function Footer() {
     }, 300); 
   };
 
+  const footer = useRef();
+
+  useEffect(()=>[
+     gsap.to(footer.current,{
+           opacity:0,
+                   duration: 1.4,
+        ease: 'power3.out',
+        delay: 0.2,
+
+               scrollTrigger: {
+        trigger: section,
+        scroller:"body",
+        start: "top 0%",
+        end:"top -100%" ,
+        scrub: 2,
+        pin: true,
+
+        markers: true, // remove in production
+      }
+     })
+  ],[])
 
 
-  return (    <section id="footer">
+
+  return (    <section id="footer" ref={footer}>
     <footer className="bg-gradient-to-l from-orange-100 to-orange-200 text-gray-800 py-10 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Contact Info */}
@@ -27,11 +52,11 @@ export default function Footer() {
           <h3 className="text-xl font-bold mb-4">Contact Us</h3>
           <div className="flex items-start gap-3 mb-2">
             <FaMapMarkerAlt className="mt-1 text-orange-600" />
-            <p>123 Finanlytic Street, Mumbai, India</p>
+            <p>Police Colony, Bihar, India</p>
           </div>
           <div className="flex items-center gap-3 mb-2">
             <FaPhone className="text-orange-600" />
-            <p>+91 98765 43210</p>
+            <p>+91 8210320947</p>
           </div>
           <div className="flex items-center gap-3">
             <FaEnvelope className="text-orange-600" />
@@ -47,10 +72,10 @@ export default function Footer() {
         >
           <h3 className="text-xl font-bold mb-4">Quick Links</h3>
           <ul className="space-y-2">
-            <li   onClick={() => handleScroll('home')} ><a  className="hover:text-orange-600">Home</a></li>
-            <li   onClick={() => handleScroll('about')}><a  className="hover:text-orange-600">About</a></li>
-            <li   onClick={() => handleScroll('features')}><a className="hover:text-orange-600">Features</a></li>
-            <li   onClick={() => handleScroll('footer')}><a  className="hover:text-orange-600">Contact</a></li>
+            <li   onClick={() => handleScroll('home')} ><a  className="hover:text-orange-600 cursor-pointer">Home</a></li>
+            <li   onClick={() => handleScroll('about')}><a  className="hover:text-orange-600 cursor-pointer">About</a></li>
+            <li   onClick={() => handleScroll('features')}><a className="hover:text-orange-600 cursor-pointer">Features</a></li>
+            <li   onClick={() => handleScroll('footer')}><a  className="hover:text-orange-600 cursor-pointer">Contact</a></li>
           </ul>
         </motion.div>
 
@@ -61,7 +86,7 @@ export default function Footer() {
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <h3 className="text-xl font-bold mb-4">Stay Connected</h3>
-          <p className="mb-3">Get updates about our latest features and offers.</p>
+          <p className="mb-3">Get updates about our latest features and feel free to reach out.</p>
           <input
             type="email"
             placeholder="Enter your email"
@@ -73,7 +98,7 @@ export default function Footer() {
               alert("Currently this service is unavailable");
             }}
           >
-            Subscribe
+            Contact us 
           </button>
         </motion.div>
       </div>
