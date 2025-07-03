@@ -40,8 +40,8 @@ export default function Footer() {
 
 
 
-  return (    <section id="footer" ref={footer}>
-    <footer className="bg-gradient-to-l from-orange-100 to-orange-200 text-gray-800 py-10 px-6">
+  return (    <section id="footer" >
+    <footer className="bg-gradient-to-l from-orange-100 to-orange-200 text-gray-800 py-10 px-6" ref={footer}>
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Contact Info */}
         <motion.div
