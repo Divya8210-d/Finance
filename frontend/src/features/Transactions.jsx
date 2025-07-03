@@ -439,7 +439,7 @@ const updatepayment = async () => {
 
       <div className="overflow-x-auto">
         <table className="min-w-full bg-orange-100 border  shadow-sm rounded-md">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100  dark:bg-gray-700">
             <tr>
               <th className="p-2 text-left">Category</th>
               <th className="p-2 text-left">Date</th>
@@ -450,13 +450,13 @@ const updatepayment = async () => {
           <tbody>
             {currentTransactions.length === 0 ? (
               <tr>
-                <td colSpan="4" className="text-center p-4 text-gray-500">
+                <td colSpan="4" className="text-center p-4 text-gray-500  dark:bg-gray-800">
                   No transactions found today.
                 </td>
               </tr>
             ) : (
               currentTransactions.map((txn, idx) => (
-                <tr key={idx} className="border-t hover:bg-orange-50">
+                <tr key={idx} className="border-t hover:bg-orange-50  dark:bg-gray-800">
                   <td className="p-2">{txn.category}</td>
                   <td className="p-2">{txn.dateofpurchase || "N/A"}</td>
                   <td className="p-2">{txn.mode || "N/A"}</td>

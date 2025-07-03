@@ -186,7 +186,7 @@ const budgetsave = async () => {
   initial={{ opacity: 0, y: 30 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ delay: 1.1, duration: 0.6 }}
-  className="mt-10 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg dark:shadow-gray-700"
+  className="mt-10 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg dark:shadow-gray-700 mb-8"
 >
   <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-gray-200">
     💰 Income Bifurcation

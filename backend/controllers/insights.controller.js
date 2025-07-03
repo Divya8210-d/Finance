@@ -34,7 +34,7 @@ const saving = asyncHandler(async (req, res) => {
     spending.Recharge.monthlyTotal +
     spending.Others.monthlyTotal;
 
-  const income = spending.monthlyincome;
+  const income = spending.cashinhand;
   const savingAmount = income - totalexpense;
 
   const promptdata = `

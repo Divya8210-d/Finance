@@ -13,8 +13,8 @@ const {month,monthlyincome,cashinhand,cash,cashless,assests,Groceries,Rents,Bill
 =req.body;
 console.log("Incoming Expense Data:", req.body);
 
-if(!monthlyincome){
-    throw new ApiError(400,"Monthlyincome is required")
+if(!monthlyincome||!cashinhand||!cash||!cashless||!assests){
+    throw new ApiError(400,"All fields are required")
 }
 
 const expense = await Spends.findOne({user:req.user.email ,month})

@@ -138,6 +138,32 @@ if(!month||!category||!mode||!amount||!date||weekIndex){
 }
 
 
+const validCategories =[
+  'Groceries', 'Rents', 'Bills', 'Shoppings',
+  'Chilling', 'Vehicles', 'Fees', 'Personal',
+  'Recharge', 'Others'
+];
+
+
+  if (!validCategories.includes(category)) {
+    return res.status(400).json(new ApiResponse(400, "Invalid category"));
+  }
+
+  
+  if (weekIndex < 0 || weekIndex > 3) {
+    return res.status(400).json(new ApiResponse(400, "Invalid week index"));
+  }
+
+  const spendingDoc = await Spends.findOne({user:req.user.email ,month})
+  const transactionDoc =await Transaction.findOne({user:req.user.email ,amount,mode,category,date})
+    if (transactionDoc) {
+    return res.status(404).json(new ApiResponse(404, "Payment has already being done"));
+  }
+
+  if (!spendingDoc) {
+    return res.status(404).json(new ApiResponse(404, "Spending record not found"));
+  }
+
 const transaction = await  Transaction.create({
     user:req.user.email,
     category:category,
@@ -147,12 +173,22 @@ const transaction = await  Transaction.create({
 
 
 })
-if(!transaction){
-  throw new ApiError(500,"Something went wrong")
+
+
+const parsedAmount = parseFloat(amount);
+if (isNaN(parsedAmount) || parsedAmount <= 0) {
+  return res.status(400).json(new ApiResponse(400, "Invalid amount"));
 }
 
+  spendingDoc[category].weekly[weekIndex] += parsedAmount;
+  spendingDoc[category].monthlyTotal += parsedAmount;
 
- res.status(200).json(new ApiResponse(200,{transaction}, "Payment verified and spending updated"));
+  await spendingDoc.save();
+
+
+
+
+ res.status(200).json(new ApiResponse(200, "Payment verified and spending updated"));
 
 
 

@@ -78,16 +78,16 @@ export default function DebtTracker() {
   }
 
   return (
-    <div className="p-5 font-inter min-h-screen bg-gray-50 flex justify-center">
+    <div className="p-5 font-inter min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center">
       <ToastContainer position="top-center" />
-      <div className="w-full ">
-        <h1 className="text-3xl font-bold mb-6 text-center">Debt Tracker</h1>
+      <div className="w-full">
+        <h1 className="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-white">Debt Tracker</h1>
 
-        <div className="flex gap-2 sm:justify-between mb-6">
+        <div className="flex gap-2 sm:justify-between mb-6 flex-wrap">
           <input
             type="text"
             placeholder="Search by name"
-            className="border px-7 py-2 rounded w-full sm:w-64"
+            className="border px-7 py-2 rounded w-full sm:w-64 bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
             onChange={(e) => {
               const searchTerm = e.target.value.toLowerCase();
               setDebts(prev =>
@@ -95,9 +95,9 @@ export default function DebtTracker() {
               );
             }}
           />
-                <button
+          <button
             onClick={() => setShowForm(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto"
+            className="bg-orange-600 text-white px-4 py-2 rounded w-full sm:w-auto"
           >
             Add Debt
           </button>
@@ -105,7 +105,7 @@ export default function DebtTracker() {
           <select
             value={debtStatus}
             onChange={(e) => setDebtStatus(e.target.value)}
-            className="border px-3 py-2 rounded w-full sm:w-40"
+            className="border px-3 py-2 rounded w-full sm:w-40 bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           >
             <option value="">All</option>
             <option value="Paid">Paid</option>
@@ -118,13 +118,11 @@ export default function DebtTracker() {
           >
             Apply Filter
           </button>
-
-    
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white shadow rounded">
-            <thead className="bg-gray-100">
+          <table className="min-w-full bg-white dark:bg-gray-800 shadow rounded-md text-gray-800 dark:text-gray-200">
+            <thead className="bg-gray-100 dark:bg-gray-700">
               <tr>
                 <th className="text-left p-2">Select</th>
                 <th className="text-left p-2">Name</th>
@@ -135,13 +133,10 @@ export default function DebtTracker() {
                 <th className="text-left p-2">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-orange-200 dark:bg-gray-900">
               {debts.length > 0 ? (
                 debts.map((debt, index) => (
-                  <motion.tr
-                    key={index}
-                    className="bg-white"
-                  >
+                  <motion.tr key={index} className="bg-white dark:bg-gray-800">
                     <td className="p-2">
                       <input
                         type="checkbox"
@@ -177,7 +172,7 @@ export default function DebtTracker() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="p-4 text-center text-gray-500">
+                  <td colSpan="7" className="p-4 text-center text-gray-500 dark:text-gray-400">
                     No debts found.
                   </td>
                 </tr>
@@ -192,7 +187,7 @@ export default function DebtTracker() {
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg"
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-lg text-gray-900 dark:text-gray-100"
           >
             <h2 className="text-xl font-semibold mb-4">Add Your Debt</h2>
             <form onSubmit={submitDebt} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -203,7 +198,7 @@ export default function DebtTracker() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Divyanshu"
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
               <div>
@@ -213,7 +208,7 @@ export default function DebtTracker() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Enter loan amount"
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
               <div>
@@ -222,7 +217,7 @@ export default function DebtTracker() {
                   type="date"
                   value={takenOn}
                   onChange={(e) => setTakenOn(e.target.value)}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
               <div>
@@ -231,20 +226,20 @@ export default function DebtTracker() {
                   type="date"
                   value={returnOn}
                   onChange={(e) => setReturnOn(e.target.value)}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
               <div className="sm:col-span-2 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 border rounded"
+                  className="px-4 py-2 border rounded dark:border-gray-600 dark:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
                   Add
                 </button>
@@ -256,6 +251,7 @@ export default function DebtTracker() {
     </div>
   );
 }
+
 
   /*
     <motion.div

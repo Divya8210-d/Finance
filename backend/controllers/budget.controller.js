@@ -1,7 +1,7 @@
-import { Budgets } from "../models/budgets.model";
-import { ApiError } from "../utilss/ApiError";
-import { ApiResponse } from "../utilss/ApiResponse";
-import asyncHandler from "../utilss/asynchandler";
+import { Budgets } from "../models/budgets.model.js";
+import { ApiError } from "../utilss/ApiError.js";
+import { ApiResponse } from "../utilss/ApiResponse.js";
+import asyncHandler from "../utilss/asynchandler.js";
 
 
 
