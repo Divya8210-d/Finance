@@ -4,12 +4,18 @@ import Auth from '../auth';
 import bull from '../Images/bull.png';
 import Typewriter from 'typewriter-effect';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
   const bullRef = useRef(null);
   const authRef = useRef(null);
+  const heroRef = useRef(null); // ✅ Add ref to the whole section
 
   useEffect(() => {
+    if (!bullRef.current || !heroRef.current) return;
+
     // GSAP animation for bull image
     gsap.fromTo(
       bullRef.current,
@@ -20,16 +26,15 @@ export default function Hero() {
         duration: 1.4,
         ease: 'power3.out',
         delay: 0.2,
-            scrollTrigger: {
-        trigger: section,
-        scroller:"body",
-        start: "top 0%",
-        end:"top -100%" ,
-        scrub: 2,
-        pin: true,
-
-        markers: true, // remove in production
-      }
+        scrollTrigger: {
+          trigger: heroRef.current, // ✅ fixed: use hero section as trigger
+          scroller: "body",
+          start: "top 80%",
+          end: "top 0%",
+          scrub: 2,
+          pin: false,
+          markers: true, // remove in production
+        },
       }
     );
 
@@ -49,7 +54,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="home">
+    <section id="home" ref={heroRef}>
       <main className="bg-gradient-to-r from-orange-400 to-orange-600 min-h-[700px] flex justify-center px-8 pt-2 relative overflow-hidden">
         <div className="max-w-6xl w-full flex flex-col lg:flex-row gap-11 relative z-10">
 
@@ -101,10 +106,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Right Form Section with GSAP ref */}
-          <div
-            ref={authRef}
-            className="flex-1 max-w-md w-full relative z-10"
-          >
+          <div ref={authRef} className="flex-1 max-w-md w-full relative z-10">
             <div className="relative z-10">
               <Auth />
             </div>
