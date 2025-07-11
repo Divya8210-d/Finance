@@ -5,7 +5,7 @@ import { givetips } from '../controllers/tips.controller.js';
 import { adddebt ,filtereddebts,getDebt,removeDebt,updatedebt } from '../controllers/debt.controller.js';
 import { gst , emi,fdmatureamount,creditCardPayoff } from '../controllers/calculator.controller.js';
 import { track } from '../controllers/progress.controller.js';
-import { saving, spendingtrends, weeklytrend } from '../controllers/insights.controller.js';
+import { cashflow, saving, spendingtrends, weeklytrend } from '../controllers/insights.controller.js';
 import { setbudget } from '../controllers/budget.controller.js';
 
 
@@ -29,6 +29,8 @@ router.post("/credit", verify, creditCardPayoff);
 router.post("/saving",verify, saving);
 router.post("/spendingtrends", verify, spendingtrends);
 router.post("/weeklytrend", verify, weeklytrend);
+router.get("/cashflow",verify,cashflow)
+
 
 
 

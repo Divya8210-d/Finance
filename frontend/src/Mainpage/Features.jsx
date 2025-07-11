@@ -57,7 +57,7 @@ export default function Features() {
             trigger: el,
             start: "top 80%",
             end: "top 50%",
-           
+            toggleActions: "play none none reverse",
           },
         }
       );

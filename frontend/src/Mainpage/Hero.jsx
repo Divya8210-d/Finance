@@ -17,7 +17,7 @@ export default function Hero() {
     if (!bullRef.current || !heroRef.current) return;
 
     // GSAP animation for bull image
-    gsap.fromTo(
+    gsap.to(
       bullRef.current,
       { scale: 0, opacity: 0 },
       {

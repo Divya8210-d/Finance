@@ -220,4 +220,30 @@ Make sure to:
   return res.status(200).json(new ApiResponse(200, { spendingDoc, aiRaw }, "Spends Fetched"));
 });
 
-export { saving, spendingtrends, weeklytrend };
+const cashflow = asyncHandler(async (req,res) => {
+
+
+const expense = await Spends.findOne({user:req.user.email ,month})
+
+if(expense){
+    throw new ApiError(400,"Spends already created")
+}
+
+const result ={
+  cashinhand:expense.cashinhand,
+  cash:expense.cash,
+  cashless:expense.cashless
+
+}
+
+
+return res.status(200).json( new ApiResponse(200,result,"Cashflow fetched"))
+
+  
+})
+
+
+
+
+
+export { saving, spendingtrends, weeklytrend ,cashflow};
