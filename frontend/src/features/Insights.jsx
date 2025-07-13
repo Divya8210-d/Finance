@@ -1,10 +1,10 @@
 import React from "react";
-import Saving from "./Insights/Saving";
-import SpendingTrends from "./Insights/SpendingTrends";
-import Week from "./Insights/Week";
+import Saving from "./Insights/Saving.jsx";
+import SpendingTrends from "./Insights/SpendingTrends.jsx";
+import Week from "./Insights/Week.jsx";
 import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
-import Cashflow from "./Insights/Cashflow";
+import Cashflow from "./Insights/Cashflow.jsx";
 
 function Insights() {
   return (
