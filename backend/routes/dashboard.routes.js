@@ -5,8 +5,8 @@ import { givetips } from '../controllers/tips.controller.js';
 import { adddebt ,filtereddebts,getDebt,removeDebt,updatedebt } from '../controllers/debt.controller.js';
 import { gst , emi,fdmatureamount,creditCardPayoff } from '../controllers/calculator.controller.js';
 import { track } from '../controllers/progress.controller.js';
-import { cashflow, saving, spendingtrends, weeklytrend } from '../controllers/insights.controller.js';
-import { setbudget } from '../controllers/budget.controller.js';
+import { budgetinsight, budgetprediction, cashflow, saving, spendingtrends, weeklytrend } from '../controllers/insights.controller.js';
+import { getBudgetmonthly, setbudget } from '../controllers/budget.controller.js';
 
 
 
@@ -15,6 +15,7 @@ const router = express.Router();
 router.post("/expenses",verify, addexpense);
 router.post("/updateexpenses", verify, updateexpense);
 router.post("/setbudget", verify, setbudget);
+router.get("/getbudgetmonthly", verify, getBudgetmonthly);
 router.post("/tips", verify, givetips);
 router.post("/track",verify,track);
 router.post("/adddebt",verify, adddebt);
@@ -30,7 +31,8 @@ router.post("/saving",verify, saving);
 router.post("/spendingtrends", verify, spendingtrends);
 router.post("/weeklytrend", verify, weeklytrend);
 router.get("/cashflow",verify,cashflow)
-
+router.get("/futureprediction",verify,budgetprediction)
+router.get("/budgetinsight",verify,budgetinsight);
 
 
 

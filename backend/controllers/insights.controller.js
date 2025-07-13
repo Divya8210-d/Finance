@@ -2,6 +2,7 @@ import asyncHandler from "../utilss/asynchandler.js";
 import { Spends } from "../models/spending.model.js";
 import { ApiError } from "../utilss/ApiError.js";
 import { ApiResponse } from "../utilss/ApiResponse.js";
+import { Budgets } from "../models/budgets.model.js";
 
 function cleanAIResponse(text = "") {
   return text
@@ -41,11 +42,11 @@ const saving = asyncHandler(async (req, res) => {
 You are a helpful and knowledgeable financial advisor AI.
 
 You will be given:
-- The user's monthly income and detailed  totalexpenses for each month and savings details
+- The user's monthly income and detailed  totalexpenses for each month and savings details 
 - A complete history of their finances over multiple months (each document represents one month)
 
 Your job is to:
-- Track progress, patterns, and savings behavior
+- Track progress, patterns, and savings behavior and warn user what could be the future situation if this trend continues.
 
 Here is the user's full financial history of month ${month}:
 ${JSON.stringify(spending, null, 2)}
@@ -59,7 +60,9 @@ ${JSON.stringify(totalexpense, null, 2)}
 Make sure to:
 - Refer to specific months and categories 
 - Use actual numbers from the data
-- Give a brief suggestion regarding the saving behaviour in 2-3 lines
+- Give a brief suggestion regarding the saving behaviour in 2-3 lines 
+ - Give tips to increase saving .
+
 
 `;
 
@@ -88,6 +91,12 @@ Make sure to:
   } catch (error) {
     console.error("AI call failed:", error.message);
   }
+
+
+
+
+
+
 
   return res.status(200).json(new ApiResponse(200, { totalexpense, saving: savingAmount, aiRaw }, "Savings Fetched"));
 });
@@ -242,8 +251,242 @@ return res.status(200).json( new ApiResponse(200,result,"Cashflow fetched"))
   
 })
 
+const budgetinsight = asyncHandler(async (req,res) => {
+
+const {month} = req.body
+
+
+const budget = await Budgets.findOne({
+  user:req.user.email,
+  month
+})
+
+if(!budget){
+  throw new ApiError(500,"No Budget found for the month")
+}
+
+  const spendingDoc = await Spends.find({
+    user: req.user.email,
+    month,
+  });
+
+  if (!spendingDoc) {
+    throw new ApiError(400, "No spendingDoc for you exists");
+  }
 
 
 
 
-export { saving, spendingtrends, weeklytrend ,cashflow};
+  const promptdata = `
+You are a helpful and knowledgeable financial advisor AI.
+
+You will be given:
+- The user's monthly budget set by the user  and detailed  weekly expenses for a each months
+- A complete history of their finances over multiple months (each document represents one month)
+
+Your job is to:
+- Analyze their financial trends across weeks in a specific month given by user
+- Comapre it with budget set by the user
+- Track progress, patterns and give advise and warning regarding the spending
+
+Here is the user's full financial history:
+${JSON.stringify(spendingDoc, null, 2)}
+
+
+Here is the month given by the user to analyize
+${JSON.stringify(month, null, 2)}
+
+Here is the user's Budget set for the above given month:
+${JSON.stringify(budget, null, 2)}
+
+
+Make sure to:
+- Refer to specific week of that month or categories where relevant
+- Use actual numbers from the data
+- Explain trends or suggestions clearly and briefly in not more than 2-3 lines
+-explain briefly only not more than 2-3 lines 
+- give the best advise to reach the budget goal
+
+`;
+
+  let aiRaw = "AI response not available.";
+
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.GROQAPI}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama3-70b-8192",
+        messages: [
+          { role: "system", content: "You are a helpful and knowledgeable financial advisor AI." },
+          { role: "user", content: promptdata },
+        ],
+      }),
+    });
+
+    const result = await response.json();
+    if (result?.choices?.[0]?.message?.content) {
+      aiRaw = cleanAIResponse(result.choices[0].message.content);
+    }
+  } catch (error) {
+    console.error("AI call failed:", error.message);
+  }
+
+
+return res.status(200).json( new ApiResponse(200,{aiRaw},"Budget fetched"))
+  
+})
+
+
+const budgetprediction = asyncHandler(async (req,res) => {
+
+
+
+
+const budget = await Budgets.findOne({
+  user:req.user.email,
+  
+})
+
+if(!budget){
+  throw new ApiError(500,"No Budget found for the month")
+}
+
+  const spendingDoc = await Spends.find({
+    user: req.user.email,
+    
+  });
+
+  if (!spendingDoc) {
+    throw new ApiError(400, "No spendingDoc for you exists");
+  }
+
+
+
+
+  const promptdata = `
+You are a helpful and knowledgeable financial advisor AI.
+
+You will be given:
+- The user's monthly budget set by the user  and detailed  weekly expenses for a each months
+- A complete history of their finances over multiple months (each document represents one month)
+- Also you will be given a the previous budget set buy the user monthly
+
+Your job is to:
+- Analyze their financial trends across weeks in a specific month given by user
+- Compare it with budget set by the user
+- Track progress, patterns between the spendings and budgets
+- Give a prediction of budget for the upcoming month.
+
+Here is the user's full financial history:
+${JSON.stringify(spendingDoc, null, 2)}
+
+
+Here is the user's full budget history:
+${JSON.stringify(budget, null, 2)}
+
+
+Make sure to:
+- Refer to specific week of that month or categories where relevant
+- Use actual numbers from the data
+- Explain trends or suggestions clearly and briefly in not more than 2-3 lines
+-explain briefly only not more than 2-3 lines 
+- Give the prediction of budget for the upcoming month
+
+`;
+
+  let aiRaw = "AI response not available.";
+
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.GROQAPI}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama3-70b-8192",
+        messages: [
+          { role: "system", content: "You are a helpful and knowledgeable financial advisor AI." },
+          { role: "user", content: promptdata },
+        ],
+      }),
+    });
+
+    const result = await response.json();
+    if (result?.choices?.[0]?.message?.content) {
+      aiRaw = cleanAIResponse(result.choices[0].message.content);
+    }
+  } catch (error) {
+    console.error("AI call failed:", error.message);
+  }
+
+
+
+
+
+  const classifypromptdata = `
+You are a helpful and knowledgeable financial advisor AI.
+
+You will be given:
+- The user's monthly budget set by the user  and detailed  weekly expenses for a each months
+- A complete history of their finances over multiple months (each document represents one month)
+- Also you will be given a the previous budget set buy the user monthly
+
+Your job is to:
+- Analyze their financial trends across weeks in a specific month given by user
+- Compare it with budget set by the user
+
+- classify the user's personality in one word
+
+Here is the user's full financial history:
+${JSON.stringify(spendingDoc, null, 2)}
+
+
+Here is the user's full budget history:
+${JSON.stringify(budget, null, 2)}
+
+
+Make sure to:
+- Refer to specific week of that month or categories where relevant
+- Describe the user's spending personality in one line.
+
+`;
+
+  let classifyaiRaw = "AI response not available.";
+
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.GROQAPI}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama3-70b-8192",
+        messages: [
+          { role: "system", content: "You are a helpful and knowledgeable financial advisor AI." },
+          { role: "user", content: promptdata },
+        ],
+      }),
+    });
+
+    const result = await response.json();
+    if (result?.choices?.[0]?.message?.content) {
+      aiRaw = cleanAIResponse(result.choices[0].message.content);
+    }
+  } catch (error) {
+    console.error("AI call failed:", error.message);
+  }
+
+
+
+return res.status(200).json( new ApiResponse(200,{aiRaw,classifyaiRaw},"Budget fetched"))
+    
+})
+
+
+export { saving, spendingtrends, weeklytrend ,cashflow,budgetinsight,budgetprediction};

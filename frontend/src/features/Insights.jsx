@@ -4,6 +4,7 @@ import SpendingTrends from "./Insights/SpendingTrends";
 import Week from "./Insights/Week";
 import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
+import Cashflow from "./Insights/Cashflow";
 
 function Insights() {
   return (
