@@ -1,9 +1,11 @@
+import { useState } from "react";
+
 export default function FutureBudget(params) {
 
-    
+  const [insight,setInsight] = useState("")
 
 const getinsight = async () => {
-        // 🧠 Replace this dummy data with actual API or logic
+        
   try {
     
 
@@ -14,7 +16,7 @@ const getinsight = async () => {
       );
       console.log("Savings response:", res.data);
       const prediction = res.data.data;
-
+   setInsight(prediction||"Sorry can'y fetch the data.")
     
     
     } catch (error) {
@@ -24,12 +26,17 @@ const getinsight = async () => {
 
   };
 useEffect(() => {
-    getcashflow();
+    getinsight
   }, [])
 
 return (<>
 
-
+  <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+        <h2 className="text-xl font-semibold mb-2 dark:text-orange-300">
+      Based on your spending behaviour some suggestions regarding your budget.
+        </h2>
+        <p className="text-gray-700 dark:text-orange-100">{insight}</p>
+      </div>
 
 </>)
   

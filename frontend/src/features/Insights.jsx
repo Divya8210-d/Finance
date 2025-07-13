@@ -5,20 +5,32 @@ import Week from "./Insights/Week.jsx";
 import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import Cashflow from "./Insights/Cashflow.jsx";
+import { useState } from "react";
+import BudgetInsight from "./Insights/BudgetInsight.jsx";
+import FutureBudget from "./Insights/FutureBudget.jsx";
 
 function Insights() {
+const [personality,setPersonality]=useState("");
+
   return (
     <div className="p-6 space-y-6 bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
       
-         <div className="bg-orange-100 dark:bg-orange-900 rounded-xl p-4 w-full mt-4">
-        <h2 className="text-xl font-semibold mb-2 dark:text-orange-300">
-          A analysis of your monthly expense
-        </h2>
-        <p className="text-gray-700 dark:text-gray-300 mb-2"></p>
-      </div>
+        
+       
+           <p className="text-gray-700 dark:text-gray-300 mb-2">
+           <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+      
+               <p className="text-gray-700 dark:text-orange-100 font-bold">{personality}</p>
+               </div>
+              </p>
+          
        <div className="flex">
         <Cashflow/>
        </div>
+         <div className="flex">
+        <BudgetInsight/>
+       </div>
+
 
       {/* Saving Chart and Insight Summary */}
       <motion.div
@@ -46,6 +58,10 @@ function Insights() {
       >
         <Week />
       </motion.div>
+
+ <div className="flex">
+        <FutureBudget/>
+       </div>
 
       <ToastContainer />
     </div>

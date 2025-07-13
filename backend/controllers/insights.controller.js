@@ -231,6 +231,7 @@ Make sure to:
 
 const cashflow = asyncHandler(async (req,res) => {
 
+const {month} = req.body;  
 
 const expense = await Spends.findOne({user:req.user.email ,month})
 
@@ -239,14 +240,81 @@ if(expense){
 }
 
 const result ={
+  monthlyincome:expense.monthlyincome,
   cashinhand:expense.cashinhand,
   cash:expense.cash,
   cashless:expense.cashless
 
 }
 
+const promptdata = `
+You are a helpful and knowledgeable financial advisor AI.
 
-return res.status(200).json( new ApiResponse(200,result,"Cashflow fetched"))
+You will be given:
+- The user's monthly income bifurcation of  the user.
+- A complete detail of income like cashinhand ,income in cash and income that is cashless and other relevant details.
+
+Your job is to:
+- Analyze their distribution pattern of income
+- Track progress, patterns and give advise and warning regarding the distribution so that it will help them grow financially.
+
+
+
+Here is the month given by the user to analyize
+${JSON.stringify(month, null, 2)}
+
+Here is the user's full income bifurcation
+${JSON.stringify(result, null, 2)}
+
+
+Make sure to:
+- Use actual numbers from the data
+- Explain trends or suggestions clearly and briefly in not more than 2-3 lines
+-explain briefly only not more than 2-3 lines 
+- give the best advise to reach the become more financially stable.
+
+`;
+
+  let aiRaw = "AI response not available.";
+
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.GROQAPI}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama3-70b-8192",
+        messages: [
+          { role: "system", content: "You are a helpful and knowledgeable financial advisor AI." },
+          { role: "user", content: promptdata },
+        ],
+      }),
+    });
+
+    const result = await response.json();
+    if (result?.choices?.[0]?.message?.content) {
+      aiRaw = cleanAIResponse(result.choices[0].message.content);
+    }
+  } catch (error) {
+    console.error("AI call failed:", error.message);
+  }
+
+
+
+
+
+
+
+
+
+
+return res.status(200).json( new ApiResponse(200,{  monthlyincome:expense.monthlyincome,
+  cashinhand:expense.cashinhand,
+  cash:expense.cash,
+  cashless:expense.cashless
+,aiRaw},"Cashflow fetched"))
 
   
 })
@@ -285,8 +353,9 @@ You will be given:
 - A complete history of their finances over multiple months (each document represents one month)
 
 Your job is to:
+
 - Analyze their financial trends across weeks in a specific month given by user
-- Comapre it with budget set by the user
+- Compare it with budget set by the user
 - Track progress, patterns and give advise and warning regarding the spending
 
 Here is the user's full financial history:
@@ -301,6 +370,7 @@ ${JSON.stringify(budget, null, 2)}
 
 
 Make sure to:
+
 - Refer to specific week of that month or categories where relevant
 - Use actual numbers from the data
 - Explain trends or suggestions clearly and briefly in not more than 2-3 lines
@@ -439,8 +509,7 @@ You will be given:
 Your job is to:
 - Analyze their financial trends across weeks in a specific month given by user
 - Compare it with budget set by the user
-
-- classify the user's personality in one word
+- classify the user's personality in one or two line
 
 Here is the user's full financial history:
 ${JSON.stringify(spendingDoc, null, 2)}

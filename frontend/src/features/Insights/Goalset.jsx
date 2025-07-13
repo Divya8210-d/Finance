@@ -5,12 +5,8 @@ import { use } from "react";
 
 
 export default function Goalset(params) {
-    const [month,setMonth]= useState();
-  const [data, setData] = useState([
-    { name: 'Cash', value: 0 },
-    { name: 'Cashless', value: 0 }
-  ]);
-
+const [plan,setPlan]=useState("")
+const [month,setMonth]=useState()
   const getcashflow = async () => {
     // 🧠 Replace this dummy data with actual API or logic
   try {
@@ -24,7 +20,7 @@ export default function Goalset(params) {
       console.log("Savings response:", res.data);
       const budget = res.data.data;
 
-    
+    setPlan(budget||"Sorry could not give your plan")
     
     } catch (error) {
          toast.error(error.response?.data?.message||"Something went wrong ")
@@ -38,14 +34,23 @@ export default function Goalset(params) {
   }, []);
 
     return (<>
-    <div>
-
-    </div>
-    
-<div>
-
-    
-</div>
+  <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+   <select
+          className="mb-4 p-2 rounded-md border shadow"
+          value={month}
+          onChange={(e) => setMonth(e.target.value)}
+        >
+          {MONTHS.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
+        <h2 className="text-xl font-semibold mb-2 dark:text-orange-300">
+    Your Detailed Budget Plans
+        </h2>
+        <p className="text-gray-700 dark:text-orange-100">{plan}</p>
+      </div>
 
     
     </>)
