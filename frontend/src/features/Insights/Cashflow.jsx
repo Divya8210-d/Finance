@@ -20,7 +20,8 @@ export default function Cashflow() {
   const getcashflow = async (selectedMonth) => {
     try {
       const res = await axios.get(
-        `https://finanlytic.onrender.com/api/v1/dashboard/cashflow?month=${selectedMonth}`,
+        `https://finanlytic.onrender.com/api/v1/dashboard/cashflow`,
+        {month},
         { withCredentials: true }
       );
       console.log("Cashflow response:", res.data);
