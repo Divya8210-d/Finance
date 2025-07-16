@@ -1,7 +1,7 @@
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-hot-toast';
+import { toast } from 'react-toast';
 
 const COLORS = ['#0088FE', '#00C49F'];
 const MONTHS = [
