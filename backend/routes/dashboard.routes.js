@@ -30,9 +30,9 @@ router.post("/credit", verify, creditCardPayoff);
 router.post("/saving",verify, saving);
 router.post("/spendingtrends", verify, spendingtrends);
 router.post("/weeklytrend", verify, weeklytrend);
-router.get("/cashflow",verify,cashflow)
-router.get("/futureprediction",verify,budgetprediction)
-router.get("/budgetinsight",verify,budgetinsight);
+router.post("/cashflow",verify,cashflow)
+router.post("/futureprediction",verify,budgetprediction)
+router.post("/budgetinsight",verify,budgetinsight);
 
 
 
