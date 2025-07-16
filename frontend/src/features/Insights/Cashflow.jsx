@@ -17,10 +17,10 @@ export default function Cashflow() {
   const [month, setMonth] = useState(new Date().toLocaleString('default', { month: 'long' }));
   const [insight, setInsight] = useState("");
 
-  const getcashflow = async (selectedMonth) => {
+  const getcashflow = async (month) => {
     try {
       const res = await axios.get(
-        `https://finanlytic.onrender.com/api/v1/dashboard/cashflow`,
+        "https://finanlytic.onrender.com/api/v1/dashboard/cashflow",
         {month},
         { withCredentials: true }
       );
