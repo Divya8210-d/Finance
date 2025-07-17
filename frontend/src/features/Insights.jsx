@@ -22,7 +22,7 @@ try {
 
       const res = await axios.post(
         "https://finanlytic.onrender.com/api/v1/dashboard/futureprediction",
-      
+      {},
         { withCredentials: true }
       );
      console.log("personality",res.data)
