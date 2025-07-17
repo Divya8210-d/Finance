@@ -12,7 +12,7 @@ const sendmail = async (email, ) => {
   });
 
   const mailOptions = {
-    from: `"Your App Name" <${process.env.EMAIL_USER}>`,
+    from: `"  Finanlytics" <${`divyanshuchoubey8210@gmail.com`}>`,
     to: email,
     subject: 'Customer support',
     html: `<p>Thanks for contacting us. We will reach out to you shortly.</p>`,
