@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Saving from "./Insights/Saving.jsx";
 import SpendingTrends from "./Insights/SpendingTrends.jsx";
 import Week from "./Insights/Week.jsx";
@@ -39,6 +39,11 @@ try {
 
   
 }
+
+
+useEffect(()=>{
+getpersonality()
+},[])
 
 
   return (
