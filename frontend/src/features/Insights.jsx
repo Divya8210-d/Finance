@@ -10,7 +10,7 @@ import BudgetInsight from "./Insights/BudgetInsight.jsx";
 import FutureBudget from "./Insights/FutureBudget.jsx";
 import Goalset from "./Insights/Goalset.jsx";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 
 function Insights() {
 const [personality,setPersonality]=useState("");
