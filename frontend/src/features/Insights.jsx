@@ -25,7 +25,7 @@ try {
       
         { withCredentials: true }
       );
-    
+     console.log("personality",res.data)
       const {classifyaiRaw} = res.data.data;
 
     setPersonality(classifyaiRaw)
