@@ -235,7 +235,7 @@ const {month} = req.body;
 
 const expense = await Spends.findOne({user:req.user.email ,month})
 
-if(expense){
+if(!expense){
     throw new ApiError(400,"Spends already created")
 }
 
