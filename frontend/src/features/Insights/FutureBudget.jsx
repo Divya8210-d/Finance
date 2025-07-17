@@ -1,52 +1,41 @@
-import { useState,useEffect } from "react";
-import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-export default function FutureBudget(params) {
+export default function FutureBudget() {
+  const [insight, setInsight] = useState("");
 
-  const [insight,setInsight] = useState("")
+  const getinsight = async () => {
+    console.log("Inside getinsight");
 
-const getinsight = async () => {
-        
-  try {
-    
-
+    try {
       const res = await axios.post(
         "https://finanlytic.onrender.com/api/v1/dashboard/futureprediction",
-        
+        {}, // empty body
         { withCredentials: true }
       );
-    console.log("Future",res.data);
-    
-      const {aiRaw} = res.data.data;
-   setInsight(aiRaw||"Sorry can'y fetch the data.")
-    
-    
+      console.log("Future", res.data);
+
+      const { aiRaw } = res.data.data;
+      setInsight(aiRaw || "Sorry can't fetch the data.");
     } catch (error) {
-         toast.error(error.response?.data?.message||"Something went wrong ")
+      console.error("Future Budget API Error", error);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
-
-
   };
-useEffect(() => {
-    getinsight()
-  }, [])
 
-return (<>
+  useEffect(() => {
+    console.log("Calling getinsight...");
+    getinsight();
+  }, []);
 
-  <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
-        <h2 className="text-xl font-semibold mb-2 dark:text-orange-300">
-      Based on your spending behaviour some suggestions regarding your budget.
-        </h2>
-        <p className="text-gray-700 dark:text-orange-100">{insight}</p>
-      </div>
-
-</>)
-  
+  return (
+    <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+      <h2 className="text-xl font-semibold mb-2 dark:text-orange-300">
+        Based on your spending behaviour some suggestions regarding your budget.
+      </h2>
+      <p className="text-gray-700 dark:text-orange-100">{insight}</p>
+    </div>
+  );
 }
-
-
-
-
-
 
