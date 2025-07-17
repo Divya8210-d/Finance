@@ -4,6 +4,11 @@ import { useState,useEffect } from "react";
 import { use } from "react";
 import { toast } from "react-toastify";
 
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 export default function Goalset(params) {
 const [plan,setPlan]=useState("")
 const [month,setMonth]=useState()
