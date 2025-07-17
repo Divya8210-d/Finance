@@ -15,7 +15,7 @@ const getinsight = async () => {
         {month},
         { withCredentials: true }
       );
-      console.log("Savings response:", res.data);
+      console.log( res.data);
       const {aiRaw} = res.data.data;
      
       setInsight(aiRaw||"Sorry can't fetch insight.")

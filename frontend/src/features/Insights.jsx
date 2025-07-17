@@ -8,9 +8,36 @@ import Cashflow from "./Insights/Cashflow.jsx";
 import { useState } from "react";
 import BudgetInsight from "./Insights/BudgetInsight.jsx";
 import FutureBudget from "./Insights/FutureBudget.jsx";
+import Goalset from "./Insights/Goalset.jsx";
 
 function Insights() {
 const [personality,setPersonality]=useState("");
+
+const getpersonality = async (req,res) => {
+
+try {
+    
+
+      const res = await axios.post(
+        "https://finanlytic.onrender.com/api/v1/dashboard/futureprediction",
+      
+        { withCredentials: true }
+      );
+    
+      const {classifyaiRaw} = res.data.data;
+
+    setPersonality(classifyaiRaw)
+    
+    } catch (error) {
+         toast.error(error.response?.data?.message||"Something went wrong ")
+    }
+
+
+  
+
+  
+}
+
 
   return (
     <div className="p-6 space-y-6 bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
@@ -26,6 +53,9 @@ const [personality,setPersonality]=useState("");
           
        <div className="flex">
         <Cashflow/>
+       </div>
+       <div>
+        <Goalset/>
        </div>
          <div className="flex">
         <BudgetInsight/>

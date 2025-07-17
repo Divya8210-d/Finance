@@ -15,9 +15,10 @@ const getinsight = async () => {
         
         { withCredentials: true }
       );
-      console.log("Savings response:", res.data);
-      const prediction = res.data.data;
-   setInsight(prediction||"Sorry can'y fetch the data.")
+    console.log(res.data);
+    
+      const {aiRaw} = res.data.data;
+   setInsight(aiRaw||"Sorry can'y fetch the data.")
     
     
     } catch (error) {
@@ -27,7 +28,7 @@ const getinsight = async () => {
 
   };
 useEffect(() => {
-    getinsight
+    getinsight()
   }, [])
 
 return (<>

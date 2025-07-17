@@ -17,10 +17,10 @@ const [month,setMonth]=useState()
         {month},
         { withCredentials: true }
       );
-      console.log("Savings response:", res.data);
-      const budget = res.data.data;
+      console.log("Monthly response:", res.data);
+      const {aiRaw} = res.data.data;
 
-    setPlan(budget||"Sorry could not give your plan")
+    setPlan(aiRaw||"Sorry could not give your plan")
     
     } catch (error) {
          toast.error(error.response?.data?.message||"Something went wrong ")

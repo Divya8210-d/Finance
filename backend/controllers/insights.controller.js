@@ -229,51 +229,42 @@ Make sure to:
   return res.status(200).json(new ApiResponse(200, { spendingDoc, aiRaw }, "Spends Fetched"));
 });
 
-const cashflow = asyncHandler(async (req,res) => {
+const cashflow = asyncHandler(async (req, res) => {
+  const { month } = req.body;
 
-const {month} = req.body;  
+  const expense = await Spends.findOne({ user: req.user.email, month });
 
-const expense = await Spends.findOne({user:req.user.email ,month})
+  if (!expense) {
+    throw new ApiError(404, "No spend data found for this month");
+  }
 
-if(!expense){
-    throw new ApiError(400,"Spends already created")
-}
+  const result = {
+    monthlyincome: expense.monthlyincome,
+    cashinhand: expense.cashinhand,
+    cash: expense.cash,
+    cashless: expense.cashless
+  };
 
-const result ={
-  monthlyincome:expense.monthlyincome,
-  cashinhand:expense.cashinhand,
-  cash:expense.cash,
-  cashless:expense.cashless
+  const promptdata = `
+  You are a helpful and knowledgeable financial advisor AI.
 
-}
+  You will be given:
+  - The user's monthly income bifurcation.
+  - A complete detail of income like cashinhand, income in cash and income that is cashless.
 
-const promptdata = `
-You are a helpful and knowledgeable financial advisor AI.
+  Your job is to:
+  - Analyze their distribution pattern of income.
+  - Track progress, patterns and give advice and warning regarding the distribution.
 
-You will be given:
-- The user's monthly income bifurcation of  the user.
-- A complete detail of income like cashinhand ,income in cash and income that is cashless and other relevant details.
+  Month:
+  ${JSON.stringify(month, null, 2)}
 
-Your job is to:
-- Analyze their distribution pattern of income
-- Track progress, patterns and give advise and warning regarding the distribution so that it will help them grow financially.
+  Income Data:
+  ${JSON.stringify(result, null, 2)}
 
-
-
-Here is the month given by the user to analyize
-${JSON.stringify(month, null, 2)}
-
-Here is the user's full income bifurcation
-${JSON.stringify(result, null, 2)}
-
-
-Make sure to:
-- Use actual numbers from the data
-- Explain trends or suggestions clearly and briefly in not more than 2-3 lines
--explain briefly only not more than 2-3 lines 
-- give the best advise to reach the become more financially stable.
-
-`;
+  - Use actual numbers from the data
+  - Explain briefly (2–3 lines)
+  `;
 
   let aiRaw = "AI response not available.";
 
@@ -293,31 +284,23 @@ Make sure to:
       }),
     });
 
-    const result = await response.json();
-    if (result?.choices?.[0]?.message?.content) {
-      aiRaw = cleanAIResponse(result.choices[0].message.content);
+    const aiResult = await response.json();
+
+    if (aiResult?.choices?.[0]?.message?.content) {
+      aiRaw = cleanAIResponse(aiResult.choices[0].message.content);
     }
   } catch (error) {
     console.error("AI call failed:", error.message);
   }
 
+  return res.status(200).json(
+    new ApiResponse(200, {
+      ...result,
+      aiRaw
+    }, "Cashflow fetched")
+  );
+});
 
-
-
-
-
-
-
-
-
-return res.status(200).json( new ApiResponse(200,{  monthlyincome:expense.monthlyincome,
-  cashinhand:expense.cashinhand,
-  cash:expense.cash,
-  cashless:expense.cashless
-,aiRaw},"Cashflow fetched"))
-
-  
-})
 
 const budgetinsight = asyncHandler(async (req,res) => {
 
