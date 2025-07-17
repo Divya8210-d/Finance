@@ -186,7 +186,7 @@ const costcutting = async () => {
    try {
     const res =    await axios.post(
           "https://finanlytic.onrender.com/api/v1/dashboard/suggestions",
-          
+          {},
           { withCredentials: true }
         );
         
