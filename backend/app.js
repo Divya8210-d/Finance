@@ -12,7 +12,7 @@ import paymentRoutes from './routes/payment.routes.js';
 const app = express();
 
 
-const allowedOrigins = ['https://finanlytic.vercel.app'];
+const allowedOrigins = ['https://finanlytic.vercel.app/'];
 
 app.use(cors({
   origin: function (origin, callback) {
