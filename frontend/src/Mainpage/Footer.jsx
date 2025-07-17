@@ -1,5 +1,9 @@
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
+import sendmail from "../../utils/Contact.js";
+import { useState } from "react";
+import { toast } from "react-toastify";
+
 
 export default function Footer() {
 
@@ -12,6 +16,16 @@ export default function Footer() {
       }
     }, 300); 
   };
+
+const [email,setEmail] = useState("")
+
+const handlesubmit = async () => {
+  
+  sendmail(email);
+
+  toast.success("We will reach out to you shortly");
+  
+}
 
 
 
@@ -66,13 +80,15 @@ export default function Footer() {
           <input
             type="email"
             placeholder="Enter your email"
+            value={email}
+            onChange={(e)=>[
+                   setEmail(e.target.value)
+            ]}
             className="w-full px-3 py-2 rounded-lg border border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
           <button
             className="mt-3 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition"
-            onClick={() => {
-              alert("Currently this service is unavailable");
-            }}
+            onClick={handlesubmit}
           >
             Contact us 
           </button>

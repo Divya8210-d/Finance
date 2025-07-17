@@ -1,4 +1,5 @@
 import { Budgets } from "../models/budgets.model.js";
+import { Spends } from "../models/spending.model.js";
 import { ApiError } from "../utilss/ApiError.js";
 import { ApiResponse } from "../utilss/ApiResponse.js";
 import asyncHandler from "../utilss/asynchandler.js";
@@ -11,8 +12,21 @@ const setbudget = asyncHandler(async (req,res) => {
 const {savingtarget , monthlybudget, description, month,Groceries,Rents,Bills,Shoppings,Chilling,Vehicles,Fees,Personal,Recharge,Others
 }  = req.body;  
 
+const spends = await Spends.findOne({
+  user:req.user.email
+})
 
-//validation daalna hai 
+const cashinhand = spends.cashinhand;
+
+if(monthlybudget>cashinhand){
+  throw new ApiError(400,"The monthly budget is exceeding your available balance for the month")
+}
+
+if(savingtarget>monthlybudget){
+  throw new ApiError(400,"Your savings can not be more than your budget")
+}
+
+
 
 const budget = await Budgets.create({
     user:req.user.email,
@@ -70,7 +84,7 @@ Your job is to:
 
 - Analyze each document given for each  specific month given by user
 - Prepare a nice notes of it and provide it to the user to show him his plans
-- The note should have each poinst coverd like the monthly budget amount category wise distribution and there priority and etc.
+- The note should have each point covered like the monthly budget amount category wise distribution and there priority and etc.
 
 
 

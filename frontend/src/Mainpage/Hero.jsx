@@ -17,12 +17,12 @@ export default function Hero() {
     if (!bullRef.current || !heroRef.current) return;
 
     // GSAP animation for bull image
-    gsap.to(
+    gsap.fromto(
       bullRef.current,
       { scale: 0, opacity: 0 },
       {
         scale: 1,
-        opacity: 0.8,
+        opacity: 1,
         duration: 1.4,
         ease: 'power3.out',
         delay: 0.2,

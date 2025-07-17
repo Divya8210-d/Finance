@@ -79,7 +79,7 @@ const Expenses = () => {
       cashinhand,
       cash,
       cashless,
-      assets,
+      assests:assets,
       monthlyincome: Number(income),
       ...categoryFields,
     };
@@ -115,6 +115,14 @@ const budgetsave = async () => {
     
      axios.post("https://finanlytic.onrender.com/api/v1/dashboard/setbudget",budget,{withCredentials:true})
  toast.success("Budget is saved");
+   setBudgetMonth("")
+   setBudgetAmount("")
+ setCategoryAllocations(
+    defaultCategories.map(() => ({ amount: "", priority: 0 }))
+  );
+  setSavingTarget("");
+   setDescription("");
+
 
    } catch (error) {
     const message =
@@ -194,7 +202,7 @@ const budgetsave = async () => {
 
   <div className="grid md:grid-cols-3 gap-6">
    <div>
-      <label className="font-semibold">CashinHand (₹)</label>
+      <label className="font-semibold">IncomeinHand (₹)</label>
       <input
         type="number"
         value={cashinhand}
@@ -363,7 +371,7 @@ const budgetsave = async () => {
             min="1"
             max="5"
             placeholder="Priority"
-            className="w-28 rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 dark:bg-gray-700 dark:text-gray-200"
+            className="w-32 rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1 dark:bg-gray-700 dark:text-gray-200"
             value={categoryAllocations[idx].priority}
             onChange={(e) => handleCategoryAllocationChange(idx, "priority", e.target.value)}
           />

@@ -10,7 +10,7 @@ const getinsight = async () => {
   try {
     
 
-      const res = await axios.get(
+      const res = await axios.post(
         "https://finanlytic.onrender.com/api/v1/dashboard/futureprediction",
         
         { withCredentials: true }

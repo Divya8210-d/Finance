@@ -7,6 +7,7 @@ import { gst , emi,fdmatureamount,creditCardPayoff } from '../controllers/calcul
 import { track } from '../controllers/progress.controller.js';
 import { budgetinsight, budgetprediction, cashflow, saving, spendingtrends, weeklytrend } from '../controllers/insights.controller.js';
 import { getBudgetmonthly, setbudget } from '../controllers/budget.controller.js';
+import { transacsuggestion } from '../controllers/transaction.controller.js';
 
 
 
@@ -15,7 +16,7 @@ const router = express.Router();
 router.post("/expenses",verify, addexpense);
 router.post("/updateexpenses", verify, updateexpense);
 router.post("/setbudget", verify, setbudget);
-router.get("/getbudgetmonthly", verify, getBudgetmonthly);
+router.post("/getbudgetmonthly", verify, getBudgetmonthly);
 router.post("/tips", verify, givetips);
 router.post("/track",verify,track);
 router.post("/adddebt",verify, adddebt);
@@ -33,7 +34,7 @@ router.post("/weeklytrend", verify, weeklytrend);
 router.post("/cashflow",verify,cashflow)
 router.post("/futureprediction",verify,budgetprediction)
 router.post("/budgetinsight",verify,budgetinsight);
-
+router.post("/suggestions",verify,transacsuggestion);
 
 
 

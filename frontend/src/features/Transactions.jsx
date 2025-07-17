@@ -12,6 +12,7 @@ const defaultCategories = [
 ];
 
 export default function Transactions() {
+  const [insight,setInsight]=useState("")
   const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState("");
   const [weekIndex, setWeek] = useState(0);
@@ -136,6 +137,27 @@ export default function Transactions() {
 
 
 const updatepayment = async () => {
+
+if(mode === "Cashless"){
+  try {
+        await axios.post(
+          "https://finanlytic.onrender.com/api/v1/payment/onlinesavepayment",
+          {
+            month,
+            category,
+            mode,
+            amount,
+            date: selectedDate,
+            weekIndex
+          },
+          { withCredentials: true }
+        );
+        toast.success("Transaction added successfully");
+        todayTransactions();
+      } catch (err) {
+        toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
+      }
+}else{
   try {
         await axios.post(
           "https://finanlytic.onrender.com/api/v1/payment/cashpayment",
@@ -156,9 +178,32 @@ const updatepayment = async () => {
       }
 }
 
+}
+
+
+const costcutting = async () => {
+
+   try {
+    const res =    await axios.post(
+          "https://finanlytic.onrender.com/api/v1/dashboard/suggestions",
+          
+          { withCredentials: true }
+        );
+        
+        setInsight(res.data.data)
+    
+      } catch (err) {
+        toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
+      }
+
+
+}
+
+
 
   useEffect(() => {
     todayTransactions();
+    costcutting()
   }, []);
 
   const indexOfLast = currentPage * transactionsPerPage;
@@ -491,6 +536,10 @@ const updatepayment = async () => {
           </button>
         </div>
       )}
+           <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+                <h1 className="font-semibold">AI insight</h1>
+               <p className="text-gray-700 dark:text-orange-100 font-bold">{insight}</p>
+               </div>
     </motion.div>
   );
 }
