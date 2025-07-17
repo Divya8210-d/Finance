@@ -36,7 +36,7 @@ const [month,setMonth]=useState()
 
   useEffect(() => {
     getcashflow();
-  }, []);
+  }, [month]);
 
     return (<>
   <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">

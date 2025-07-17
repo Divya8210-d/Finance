@@ -15,7 +15,7 @@ const getinsight = async () => {
         
         { withCredentials: true }
       );
-    console.log(res.data);
+    console.log("Future",res.data);
     
       const {aiRaw} = res.data.data;
    setInsight(aiRaw||"Sorry can'y fetch the data.")
