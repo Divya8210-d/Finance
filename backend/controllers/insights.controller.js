@@ -439,7 +439,7 @@ ${JSON.stringify(spendingDoc, null, 2)}
 
 
 Here is the user's full budget history:
-${JSON.stringify(budget, null, 2)}
+${JSON.stringify(budgets, null, 2)}
 
 
 Make sure to:
@@ -499,7 +499,7 @@ ${JSON.stringify(spendingDoc, null, 2)}
 
 
 Here is the user's full budget history:
-${JSON.stringify(budget, null, 2)}
+${JSON.stringify(budgets, null, 2)}
 
 
 Make sure to:
