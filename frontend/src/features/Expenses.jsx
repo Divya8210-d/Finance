@@ -100,39 +100,37 @@ const Expenses = () => {
     }
   };
 
-
 const budgetsave = async () => {
+  try {
+    const categoryData = {};
+    defaultCategories.forEach((cat, i) => {
+      categoryData[cat] = categoryAllocations[i];
+    });
 
-   try {
-     const budget ={
-       savingtarget:savingTarget ,
-     monthlybudget:budgetAmount,
+    const budget = {
+      savingtarget: savingTarget,
+      monthlybudget: budgetAmount,
       description,
-     month:  budgetMonth,
-     ...categoryAllocations
-     
-     }
-    
-     axios.post("https://finanlytic.onrender.com/api/v1/dashboard/setbudget",budget,{withCredentials:true})
- toast.success("Budget is saved");
-   setBudgetMonth("")
-   setBudgetAmount("")
- setCategoryAllocations(
-    defaultCategories.map(() => ({ amount: "", priority: 0 }))
-  );
-  setSavingTarget("");
-   setDescription("");
+      month: budgetMonth,
+      ...categoryData,
+    };
 
+    await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/setbudget", budget, {
+      withCredentials: true,
+    });
 
-   } catch (error) {
-    const message =
-        err.response?.data?.message || "Something went wrong";
-      toast.error(message);
-   }
+    toast.success("Budget is saved");
 
-
-  
-}
+    setBudgetMonth("");
+    setBudgetAmount("");
+    setCategoryAllocations(defaultCategories.map(() => ({ amount: "", priority: 0 })));
+    setSavingTarget("");
+    setDescription("");
+  } catch (error) {
+    const message = error.response?.data?.message || "Something went wrong";
+    toast.error(message);
+  }
+};
 
 
 
