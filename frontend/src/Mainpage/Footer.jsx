@@ -1,6 +1,6 @@
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
-import sendmail from "../../utils/Contact.js";
+
 import { useState } from "react";
 import { toast } from "react-toastify";
 
