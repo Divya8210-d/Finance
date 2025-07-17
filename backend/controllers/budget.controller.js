@@ -13,7 +13,8 @@ const {savingtarget , monthlybudget, description, month,Groceries,Rents,Bills,Sh
 }  = req.body;  
 
 const spends = await Spends.findOne({
-  user:req.user.email
+  user:req.user.email,
+  month
 })
 
 const cashinhand = spends.cashinhand;

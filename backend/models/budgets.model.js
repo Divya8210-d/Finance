@@ -12,7 +12,7 @@ const budgetSchema = new Schema(
     type:String,
     required:true
  },
- monthtlybudget:{
+ monthlybudget:{
     type:Number,
     required:true,
  },
