@@ -19,13 +19,6 @@ export default function Footer() {
 
 const [email,setEmail] = useState("")
 
-const handlesubmit = async () => {
-  
-  sendmail(email);
-
-  toast.success("We will reach out to you shortly");
-  
-}
 
 
 
@@ -88,7 +81,7 @@ const handlesubmit = async () => {
           />
           <button
             className="mt-3 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition"
-            onClick={handlesubmit}
+        
           >
             Contact us 
           </button>
