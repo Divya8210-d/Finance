@@ -399,13 +399,13 @@ const budgetprediction = asyncHandler(async (req,res) => {
 
 
 
-const budget = await Budgets.findOne({
+const budgets = await Budgets.find({
   user:req.user.email,
   
 })
 
-if(!budget){
-  throw new ApiError(500,"No Budget found for the month")
+if(budgets.length==0){
+  throw new ApiError(500,"No Budgets")
 }
 
   const spendingDoc = await Spends.find({
@@ -413,7 +413,7 @@ if(!budget){
     
   });
 
-  if (!spendingDoc) {
+  if (spendingDoc.length==0) {
     throw new ApiError(400, "No spendingDoc for you exists");
   }
 
