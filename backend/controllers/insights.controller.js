@@ -526,9 +526,9 @@ Make sure to:
       }),
     });
 
-    const result = await response.json();
-    if (result?.choices?.[0]?.message?.content) {
-      aiRaw = cleanAIResponse(result.choices[0].message.content);
+    const classifyresult = await response.json();
+    if (classifyresult?.choices?.[0]?.message?.content) {
+      classifyaiRaw = cleanAIResponse(classifyresult.choices[0].message.content);
     }
   } catch (error) {
     console.error("AI call failed:", error.message);

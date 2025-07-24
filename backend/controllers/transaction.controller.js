@@ -9,6 +9,14 @@ import { ApiError } from "../utilss/ApiError.js";
 import { Budgets } from "../models/budgets.model.js";
 
 
+function cleanAIResponse(text = "") {
+  return text
+    .replace(/[*_`~#>-]/g, "")
+    .replace(/\n+/g, " ")
+    .trim();
+}
+
+
 const razorpay = new Razorpay({
   key_id:"rzp_test_W5q6dvRFx7DDty",
   key_secret:"chjX8jr5CjsvwapgeZuSYkmd"

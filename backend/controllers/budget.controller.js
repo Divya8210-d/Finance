@@ -4,6 +4,12 @@ import { ApiError } from "../utilss/ApiError.js";
 import { ApiResponse } from "../utilss/ApiResponse.js";
 import asyncHandler from "../utilss/asynchandler.js";
 
+function cleanAIResponse(text = "") {
+  return text
+    .replace(/[*_`~#>-]/g, "")
+    .replace(/\n+/g, " ")
+    .trim();
+}
 
 
 
@@ -27,7 +33,14 @@ if(savingtarget>monthlybudget){
   throw new ApiError(400,"Your savings can not be more than your budget")
 }
 
+const existingbudget = await Budgets.findOne({
+  user:req.user.email,
+  month
+})
 
+if(existingbudget){
+  throw new ApiError(500,"Budget already created and saved")
+}
 
 const budget = await Budgets.create({
     user:req.user.email,
@@ -129,6 +142,7 @@ Make sure to:
   } catch (error) {
     console.error("AI call failed:", error.message);
   }
+
 
 
 
