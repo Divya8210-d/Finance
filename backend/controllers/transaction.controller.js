@@ -371,7 +371,7 @@ ${JSON.stringify(budget, null, 2)}
 
     const result = await response.json();
     if (result?.choices?.[0]?.message?.content) {
-      aiRaw = cleanAIResponse(result.choices[0].message.content);
+      aiRaw = result.choices[0].message.content
     }
   } catch (error) {
     console.error("AI call failed:", error.message);

@@ -521,14 +521,14 @@ Make sure to:
         model: "llama3-70b-8192",
         messages: [
           { role: "system", content: "You are a helpful and knowledgeable financial advisor AI." },
-          { role: "user", content: promptdata },
+          { role: "user", content: classifypromptdata },
         ],
       }),
     });
 
     const classifyresult = await response.json();
     if (classifyresult?.choices?.[0]?.message?.content) {
-      classifyaiRaw = cleanAIResponse(classifyresult.choices[0].message.content);
+      classifyaiRaw = classifyresult.choices[0].message.content
     }
   } catch (error) {
     console.error("AI call failed:", error.message);
