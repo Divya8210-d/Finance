@@ -9,6 +9,7 @@ const spendingSchema = new Schema({
     },
 month:{
     type:String,
+    required:true
 },
 monthlyincome:{
     type:Number,
