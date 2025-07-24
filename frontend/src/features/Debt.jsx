@@ -10,7 +10,8 @@ export default function DebtTracker() {
   const [amount, setAmount] = useState("");
   const [takenOn, setTakenOn] = useState("");
   const [returnOn, setReturnOn] = useState("");
-  const [debts, setDebts] = useState([]);
+const [debts, setDebts] = useState([]);        // Stores filtered list //important hai yeh very
+
   const [debtStatus, setDebtStatus] = useState("");
   const [showForm, setShowForm] = useState(false);
 
@@ -58,6 +59,7 @@ export default function DebtTracker() {
         { withCredentials: true }
       );
       setDebts(res.data.data);
+      setAllDebts(res.data.data)
     } catch (err) {
       toast.error(err.response?.data?.message || err.message);
     }
@@ -90,9 +92,13 @@ export default function DebtTracker() {
             className="border px-7 py-2 rounded w-full sm:w-64 bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
             onChange={(e) => {
               const searchTerm = e.target.value.toLowerCase();
+                   if(!searchTerm){
+                    getDebts()
+                   }else{
               setDebts(prev =>
                 prev.filter(d => d.name.toLowerCase().includes(searchTerm))
               );
+            }
             }}
           />
           <button
@@ -107,7 +113,7 @@ export default function DebtTracker() {
             onChange={(e) => setDebtStatus(e.target.value)}
             className="border px-3 py-2 rounded w-full sm:w-40 bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           >
-            <option value="">All</option>
+            <option value="All">All</option>
             <option value="Paid">Paid</option>
             <option value="Unpaid">Unpaid</option>
           </select>
@@ -121,8 +127,8 @@ export default function DebtTracker() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white dark:bg-gray-800 shadow rounded-md text-gray-800 dark:text-gray-200">
-            <thead className="bg-gray-100 dark:bg-gray-700">
+          <table className="min-w-full bg-white dark:bg-gray-800 shadow rounded-lg text-gray-800 dark:text-gray-200">
+            <thead className="bg-orange-100 dark:bg-gray-700 rounded-lg">
               <tr>
                 <th className="text-left p-2">Select</th>
                 <th className="text-left p-2">Name</th>
@@ -135,9 +141,26 @@ export default function DebtTracker() {
             </thead>
             <tbody className="bg-orange-200 dark:bg-gray-900">
               {debts.length > 0 ? (
-                debts.map((debt, index) => (
-                  <motion.tr key={index} className="bg-white dark:bg-gray-800">
-                    <td className="p-2">
+
+
+                debts.map((debt, index) => {
+                   const returnDate = new Date(debt.returnOn);
+  const today = new Date();
+  const diffInDays = Math.ceil((returnDate - today) / (1000 * 60 * 60 * 24)); // days diff
+
+  // Determine background color
+  let bgColor = "bg-white dark:bg-gray-800"; // default
+  if (diffInDays <= 3) {
+    bgColor = "bg-red-200 dark:bg-red-700";   // less than or equal to 3 days
+  } else if (diffInDays <= 7) {
+    bgColor = "bg-yellow-200 dark:bg-yellow-700"; // less than or equal to 7 days
+  }
+
+                  
+                return  <motion.tr key={index} className={`${bgColor}`} >{/*impotant very */}
+                    <td className="p-2" >
+                      
+                  
                       <input
                         type="checkbox"
                         checked={debt.paid}
@@ -169,7 +192,7 @@ export default function DebtTracker() {
                       </button>
                     </td>
                   </motion.tr>
-                ))
+})
               ) : (
                 <tr>
                   <td colSpan="7" className="p-4 text-center text-gray-500 dark:text-gray-400">
@@ -211,24 +234,27 @@ export default function DebtTracker() {
                   className="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Taken On</label>
-                <input
-                  type="date"
-                  value={takenOn}
-                  onChange={(e) => setTakenOn(e.target.value)}
-                  className="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Return On</label>
-                <input
-                  type="date"
-                  value={returnOn}
-                  onChange={(e) => setReturnOn(e.target.value)}
-                  className="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                />
-              </div>
+            <div>
+  <label className="block text-sm font-medium mb-1">Taken On</label>
+  <input
+    type="date"
+    value={takenOn}
+    onChange={(e) => setTakenOn(e.target.value)}
+    className="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+  />
+</div>
+
+<div>
+  <label className="block text-sm font-medium mb-1">Return On</label>
+  <input
+    type="date"
+    value={returnOn}
+    onChange={(e) => setReturnOn(e.target.value)}
+    min={takenOn} // 👈 Lock return date before taken date // very important very very
+    className="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+  />
+</div>
+
               <div className="sm:col-span-2 flex justify-end gap-2">
                 <button
                   type="button"

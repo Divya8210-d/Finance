@@ -64,7 +64,7 @@ function Week() {
   }, [selectedMonth]);
 
   return (
-    <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md mt-6 dark:text-gray-200">
+    <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md  dark:text-gray-200">
       <ToastContainer position="top-center" />
       <h2 className="text-xl font-semibold mb-4 text-left dark:text-gray-100">Weekly Expense Trends</h2>
 

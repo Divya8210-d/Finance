@@ -35,7 +35,7 @@ function Saving() {
       ]);
       setInsights(aiRaw);
     } catch (error) {
-         toast.error(error.response?.data?.message||"Something went wrong ")
+         setInsights(error.response?.data?.message||"Something went wrong ")
       
       setData(null);
     } finally {
@@ -71,7 +71,7 @@ function Saving() {
           <p className="mt-4 dark:text-gray-300">Loading...</p>
         ) : data ? (
           <div className="">
-            <PieChart width={650} height={400}>
+            <PieChart width={670} height={400}>
               <Pie
                 data={data}
                 cx="40%"

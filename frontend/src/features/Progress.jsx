@@ -50,7 +50,7 @@ const Progress = () => {
 
       {/* Welcome */}
       <motion.div
-        className="bg-orange-100 dark:bg-orange-800 p-4 rounded-lg shadow-sm mb-8"
+        className="bg-orange-100 dark:bg-gray-800 p-4 rounded-lg shadow-sm mb-8 dark:text-white"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}

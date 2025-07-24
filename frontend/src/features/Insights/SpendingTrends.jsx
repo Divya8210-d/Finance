@@ -78,7 +78,7 @@ function SpendingTrends() {
   }, []);
 
   return (
-    <div className="min-h-screen p-4 bg-white dark:bg-gray-900 text-black dark:text-white">
+    <div className=" p-4 bg-white dark:bg-gray-900 text-black dark:text-white">
       <ToastContainer position="top-center" />
 
       <div className="h-[400px] mt-2 shadow-lg rounded-xl p-14 w-full bg-white dark:bg-gray-800">

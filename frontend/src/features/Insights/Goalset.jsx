@@ -28,7 +28,7 @@ const [month,setMonth]=useState()
     setPlan(aiRaw||"Sorry could not give your plan")
     
     } catch (error) {
-         toast.error(error.response?.data?.message||"Something went wrong ")
+         setPlan(error.response?.data?.message||"Something went wrong ")
     }
 
 
@@ -39,7 +39,7 @@ const [month,setMonth]=useState()
   }, [month]);
 
     return (<>
-  <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+  <div className="max-w-6xl w-full  bg-orange-100 dark:bg-orange-900 rounded-xl p-4 ml-10">
    <select
           className="mb-4 p-2 rounded-md border shadow"
           value={month}

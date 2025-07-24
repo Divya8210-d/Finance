@@ -3,12 +3,29 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useLocation, useNavigate } from "react-router";
+import MutualFunds from "./Trackers/Mutualfunds.";
+import Stock from "./Trackers/Stocks";
+import Gold from "./Trackers/Gold";
+import Crypto from "./Trackers/Crypto";
 
 export default function InvestmentTips() {
   const [openQuestion, setOpenQuestion] = useState(null);
   const [answers, setAnswers] = useState({});
   const [classification, setClassification] = useState();
   const [tips, setTips] = useState([]);
+
+  const location = useLocation();
+  const navigate = useNavigate(); 
+
+  const ismutualfunds = location.pathname.endsWith("/mutualfunds");
+  const isstocks = location.pathname.endsWith("/stocks");
+  const isgold = location.pathname.endsWith("/gold");
+  const iscrypto = location.pathname.endsWith("/crypto");
+
+
+ const closeModal = () => navigate("/Dashboard/Tips");
+
 
   const toggleQuestion = (index) => {
     setOpenQuestion(openQuestion === index ? null : index);
@@ -246,10 +263,54 @@ export default function InvestmentTips() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Investment Tips
+        Investments
       </motion.h1>
 
       <hr className="mb-6 border-gray-300 dark:border-gray-600" />
+
+      <motion.div
+        className="flex gap-16 ml-14"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
+<div className="p-8 mb-6 rounded-lg bg-green-300 font-inter font-bold shadow-lg hover:cursor-pointer hover:scale-105 transform transition duration-300 dark:text-white"
+  onClick={()=>{
+    navigate("mutualfunds")
+  }}>
+  Mutual funds Tracker
+</div>
+
+<div
+onClick={()=>{
+    navigate("stocks")
+  }}
+
+ className="p-8 mb-6 rounded-lg bg-red-500 font-inter font-bold shadow-lg hover:cursor-pointer hover:scale-105 transform transition duration-300 dark:text-white">
+  Stocks update
+</div>
+
+<div
+onClick={()=>{
+    navigate("gold")
+  }} 
+className="p-8 mb-6 rounded-lg bg-yellow-300 font-inter font-bold shadow-lg hover:cursor-pointer hover:scale-105 transform transition duration-300 dark:text-white">
+  Gold assets tracker
+</div>
+
+<div 
+    onClick={()=>{
+    navigate("crypto")
+  }}
+className="p-8 mb-6 rounded-lg bg-blue-300 font-inter font-bold shadow-lg hover:cursor-pointer hover:scale-105 transform transition duration-300 dark:text-white">
+  Crypto assets tracker
+</div>
+
+
+
+      </motion.div>
+
+
 
       <motion.div
         className="text-black dark:bg-gray-900 dark:text-white bg-orange-100 p-4 rounded-lg shadow-sm mb-8 text-semibold"
@@ -257,7 +318,7 @@ export default function InvestmentTips() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        <p>Welcome! Here are some key questions to guide your investment journey.</p>
+        <p>Want some assistance in investing provide us your few details and get best tips regarding your investments!!</p>
       </motion.div>
 
       {questions.map((item, index) => (
@@ -325,6 +386,13 @@ export default function InvestmentTips() {
           </motion.div>
         )}
       </AnimatePresence>
+
+
+      {ismutualfunds&&<MutualFunds onClose={closeModal}/>}
+      {isstocks&&<Stock onClose={closeModal}/>}
+      {isgold&&<Gold onClose={closeModal}/>}
+      {iscrypto&&<Crypto onClose={closeModal}/>}
+
     </div>
   );
 }

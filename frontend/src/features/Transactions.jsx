@@ -190,7 +190,7 @@ const costcutting = async () => {
           { withCredentials: true }
         );
         
-        setInsight(res.data.data)
+        setInsight(res.data.data||"AI response not found")
     
       } catch (err) {
         toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
@@ -520,7 +520,7 @@ const costcutting = async () => {
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className="px-3 py-1 border rounded disabled:opacity-50 hover:cursor-pointer shadow-lg"
           >
             Previous
           </button>
@@ -530,13 +530,13 @@ const costcutting = async () => {
           <button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className="px-3 py-1 border rounded disabled:opacity-50 hover:cursor-pointer shadow-lg"
           >
             Next
           </button>
         </div>
       )}
-           <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+           <div className="max-w-full  bg-orange-100 dark:bg-gray-700 rounded-xl p-4 dark:text:white mt-5">
                 <h1 className="font-semibold">AI insight</h1>
                <p className="text-gray-700 dark:text-orange-100 font-bold">{insight}</p>
                </div>

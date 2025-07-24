@@ -20,7 +20,7 @@ export default function FutureBudget() {
       setInsight(aiRaw || "Sorry can't fetch the data.");
     } catch (error) {
       console.error("Future Budget API Error", error);
-      toast.error(error.response?.data?.message || "Something went wrong");
+    setInsight(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -30,7 +30,7 @@ export default function FutureBudget() {
   }, []);
 
   return (
-    <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+    <div className="max-w-6xl w-full ml-6 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
       <h2 className="text-xl font-semibold mb-2 dark:text-orange-300">
         Based on your spending behaviour some suggestions regarding your budget.
       </h2>

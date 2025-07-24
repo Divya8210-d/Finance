@@ -51,8 +51,8 @@ getpersonality()
       
         
        
-           <p className="text-gray-700 dark:text-gray-300 mb-2">
-           <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+           <p className="text-gray-700 dark:text-gray-300 mb-2 ml-10">
+           <div className="max-w-6xl bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
       
                <p className="text-gray-700 dark:text-orange-100 font-bold">{personality}</p>
                </div>

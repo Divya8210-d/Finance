@@ -35,7 +35,7 @@ export default function Cashflow() {
 
       setInsight(aiRaw || "No insight available for this month.");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      setInsight(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -44,10 +44,10 @@ export default function Cashflow() {
   }, [month]);
 
   return (
-    <div className="flex flex-col md:flex-row items-start justify-center gap-6 mt-6">
+    <div className="flex flex-col md:flex-row w-full md:w-1/2 gap-20 mt-6 ml-10" >
       
       {/* Chart Section */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center  border rounded-2xl p-8 shadow-md ">
         <select
           className="mb-4 p-2 rounded-md border shadow"
           value={month}
@@ -81,7 +81,7 @@ export default function Cashflow() {
       </div>
 
       {/* Insights Section */}
-      <div className="max-w-xl w-full md:w-1/2 bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
+      <div className="max-w-6xl min-w-full  bg-orange-100 dark:bg-orange-900 rounded-xl p-4">
         <h2 className="text-xl font-semibold mb-2 dark:text-orange-300">
           Insights regarding the income flow
         </h2>
