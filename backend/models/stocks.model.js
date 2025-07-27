@@ -2,6 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 
 const stocksschema = new Schema({
+      user:{
+        type:String,
+        required:true
+    },
+
     stocksymbol:{
         type:String,
         required:true,
@@ -14,7 +19,7 @@ const stocksschema = new Schema({
         type:Date,
         required:true
     },
-    currentvalue:{
+    currentValue:{
         type:Number,
         
     },

@@ -1,25 +1,38 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function MutualFunds({ onClose }) {
   const [fundName, setFundName] = useState("");
   const [investmentAmount, setInvestmentAmount] = useState("");
   const [investmentDate, setInvestmentDate] = useState("");
   
-  const [notes, setNotes] = useState("");
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // You can call API or update state here
+    
     const newFund = {
       fundName,
       investmentAmount,
       investmentDate,
-      currentValue,
-      notes,
+      
+    
     };
 
-    console.log("Submitted Fund:", newFund);
+     try {
+          const res = await axios.post(
+            "https://finanlytic.onrender.com/api/v1/dashboard/savemutualfunds",
+            newFund,
+            { withCredentials: true }
+          );
+          toast.success("Mutual funds saved")
+          
+         
+    
+        } catch (error) {
+          toast.error(error.response?.data?.message || "Something went wrong");
+        }
 
     // Optionally reset fields or close modal
     onClose();
@@ -72,15 +85,7 @@ export default function MutualFunds({ onClose }) {
       
 
           {/* Notes (optional) */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Notes (optional)</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700"
-              placeholder="SIP details, exit load info, etc."
-            />
-          </div>
+        
 
           {/* Buttons */}
           <div className="flex justify-between">

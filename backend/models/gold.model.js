@@ -2,6 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 
 const goldschema = new Schema({
+      user:{
+        type:String,
+        required:true
+    },
+
     goldType:{
         type:String,
         required:true,
@@ -14,7 +19,7 @@ const goldschema = new Schema({
         type:Date,
         required:true
     },
-    currentvalue:{
+    currentValue:{
         type:Number,
         
     },

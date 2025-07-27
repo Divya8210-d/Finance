@@ -2,12 +2,17 @@ import mongoose, { Schema } from "mongoose";
 
 
 const cryptosschema = new Schema({
+    user:{
+        type:String,
+        required:true
+    },
+
     cryptoname:{
         type:String,
         required:true,
     },
     symbol:{
-        type:Number,
+        type:String,
         required:true,
     },
     purchaseDate:{
@@ -21,6 +26,9 @@ const cryptosschema = new Schema({
     quantity:{
         type:Number,
         required:true
+    },
+    currentValue:{
+        type:String,
     }
 })
 

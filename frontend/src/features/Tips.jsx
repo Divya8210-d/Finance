@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,6 +8,16 @@ import MutualFunds from "./Trackers/Mutualfunds.";
 import Stock from "./Trackers/Stocks";
 import Gold from "./Trackers/Gold";
 import Crypto from "./Trackers/Crypto";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
+
 
 export default function InvestmentTips() {
   const [openQuestion, setOpenQuestion] = useState(null);
@@ -252,7 +262,108 @@ export default function InvestmentTips() {
       ),
     },
   ];
+const [mutualFundsData, setMutualFundsData] = useState([]);//importnat array of mutual funds backend se le aaye abb uspe map laga ke display kardenge
+const [goldData, setGoldData] = useState([]);
+const [stocksData,setStocksData] =useState([]);
+const [cryptoData,setCryptoData]=useState([])
+const [mutualchart,setmutualchart] = useState([])
+const [stockchart,setstockchart] = useState([])
+const [goldchart,setgoldchart] = useState([])
+const [cryptochart,setcryptochart] = useState([])
 
+  const getmutualfunds = async () => {
+     try {
+      const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/mutualfunds", {}, {
+        withCredentials: true,
+      });
+     setMutualFundsData(res.data.data)
+     const chartdata = res.data.data.map((fund)=>{//direct res.data.data par map lagaya kyunki  utual fund data asycnromously update ho ga to empty bhi hosakta hai
+      return {
+       fundName: fund.fundName,
+       CurrentValue:fund.CurrentValue
+      }
+        
+     })
+
+     setmutualchart(chartdata)
+    } catch (err) {
+      const message = err.response?.data?.message || "An unknown error occurred";
+    
+      toast.error(message);
+    }
+  }
+    const getstocks = async () => {
+      try {
+      const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/stocks", {}, {
+        withCredentials: true,
+      });
+       setStocksData(res.data.data)
+         const chartdata = res.data.data.map((stock)=>{
+      return {
+       StockSymbol: stock.stocksymbol,
+       CurrentValue:stock.currentValue
+      }
+        
+     })
+
+     setstockchart(chartdata)
+    } catch (err) {
+      const message = err.response?.data?.message || "An unknown error occurred";
+    
+      toast.error(message);
+    }
+  }
+    const getgolds = async () => {
+      try {
+      const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/golds", {}, {
+        withCredentials: true,
+      });
+       setGoldData(res.data.data)
+         const chartdata = res.data.data.map((gold)=>{
+      return {
+       GoldType: gold.goldType,
+       CurrentValue:gold.currentValue
+      }
+        
+     })
+
+     setgoldchart(chartdata)
+    } catch (err) {
+      const message = err.response?.data?.message || "An unknown error occurred";
+    
+      toast.error(message);
+    }
+  }
+    const getcrypto = async () => {
+      try {
+      const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/crypto", {}, {
+        withCredentials: true,
+      });
+        setCryptoData(res.data.data)
+          const chartdata = res.data.data.map((crypto)=>{
+      return {
+       CryptoName: crypto.cryptoname,
+       CurrentValue:crypto.currentValue
+      }
+        
+     })
+
+     setcryptochart(chartdata)
+     
+    } catch (err) {
+      const message = err.response?.data?.message || "An unknown error occurred";
+    
+      toast.error(message);
+    }
+  }
+
+
+  useEffect(()=>{
+    getmutualfunds()
+    getgolds()
+    getstocks()
+    getcrypto()
+  })
   return (
     <div className="p-6 pl-10 text-gray-800 dark:text-gray-200 text-left font-inter">
       <ToastContainer position="top-center" autoClose={3000} />
@@ -309,7 +420,201 @@ className="p-8 mb-6 rounded-lg bg-blue-300 font-inter font-bold shadow-lg hover:
 
 
       </motion.div>
+<div>
+  {mutualFundsData.length > 0 && (
+  <div className="mt-10">
+    <h2 className="text-xl font-semibold mb-4">Your Mutual Fund Investments</h2>
+    <div className="overflow-auto rounded-lg shadow">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead className="bg-gray-100 dark:bg-gray-800">
+          <tr>
+            <th className="px-4 py-2 text-left text-sm font-medium">Fund Name</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Investment Amount</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Investment Date</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Current Value</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900">
+          {mutualFundsData.map((fund, idx) => (
+            <tr key={idx}>
+              <td className="px-4 py-2">{fund.fundname}</td>
+              <td className="px-4 py-2">₹{fund.investmentAmount}</td>
+              <td className="px-4 py-2">{new Date(fund.investmentDate).toLocaleDateString()}</td>
+              <td className="px-4 py-2">
+                {fund.currentvalue ? `₹${fund.currentvalue}` : "N/A"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
 
+</div>
+<div>
+{mutualchart.length > 0 && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold mb-2">Mutual Fund Chart</h3>
+    <ResponsiveContainer width="100%" height={300}>
+      <LineChart data={mutualchart}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="fundName" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="CurrentValue" stroke="#8884d8" />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+)}
+</div>
+
+{goldData.length > 0 && (
+  <div className="mt-10">
+    <h2 className="text-xl font-semibold mb-4">Your Gold Investments</h2>
+    <div className="overflow-auto rounded-lg shadow">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead className="bg-yellow-100 dark:bg-yellow-900">
+          <tr>
+            <th className="px-4 py-2 text-left text-sm font-medium">Gold Type</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Quantity (g)</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Purchase Date</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Price/gram</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Current Value</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900">
+          {goldData.map((gold, idx) => (
+            <tr key={idx}>
+              <td className="px-4 py-2">{gold.goldType}</td>
+              <td className="px-4 py-2">{gold.quantity}</td>
+              <td className="px-4 py-2">{new Date(gold.purchaseDate).toLocaleDateString()}</td>
+              <td className="px-4 py-2">₹{gold.Pricepergram}</td>
+              <td className="px-4 py-2">
+                {gold.currentvalue ? `₹${gold.currentvalue}` : "N/A"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+<div>
+  {goldchart.length > 0 && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold mb-2">Gold Investment Chart</h3>
+    <ResponsiveContainer width="100%" height={300}>
+      <LineChart data={goldchart}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="GoldType" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="CurrentValue" stroke="#FFD700" />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+)}
+
+</div>
+
+{stocksData.length > 0 && (
+  <div className="mt-10">
+    <h2 className="text-xl font-semibold mb-4">Your Stock Holdings</h2>
+    <div className="overflow-auto rounded-lg shadow">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead className="bg-red-100 dark:bg-red-900">
+          <tr>
+            <th className="px-4 py-2 text-left text-sm font-medium">Stock Symbol</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">No. of Shares</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Purchase Date</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Buy Price</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Current Value</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900">
+          {stocksData.map((stock, idx) => (
+            <tr key={idx}>
+              <td className="px-4 py-2">{stock.stocksymbol}</td>
+              <td className="px-4 py-2">{stock.numberofShares}</td>
+              <td className="px-4 py-2">{new Date(stock.purchaseDate).toLocaleDateString()}</td>
+              <td className="px-4 py-2">₹{stock.buyPrice}</td>
+              <td className="px-4 py-2">
+                {stock.currentvalue ? `₹${stock.currentvalue}` : "N/A"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+<div>
+  {stockchart.length > 0 && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold mb-2">Stock Investment Chart</h3>
+    <ResponsiveContainer width="100%" height={300}>
+      <LineChart data={stockchart}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="StockSymbol" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="CurrentValue" stroke="#FF6347" />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+)}
+
+</div>
+
+{cryptoData.length > 0 && (
+  <div className="mt-10">
+    <h2 className="text-xl font-semibold mb-4">Your Crypto Holdings</h2>
+    <div className="overflow-auto rounded-lg shadow">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead className="bg-red-100 dark:bg-red-900">
+          <tr>
+            <th className="px-4 py-2 text-left text-sm font-medium">CryptoName</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Symbol</th>
+                        <th className="px-4 py-2 text-left text-sm font-medium">Quantity</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Purchase Date</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Buy Price</th>
+            <th className="px-4 py-2 text-left text-sm font-medium">Quantity </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900">
+          {cryptoData.map((crypto, idx) => (
+            <tr key={idx}>
+              <td className="px-4 py-2">{crypto.cryptoname}</td>
+              <td className="px-4 py-2">{crypto.symbol}</td>
+               <td className="px-4 py-2">{crypto.quantity}</td>
+              <td className="px-4 py-2">{new Date(crypto.purchaseDate).toLocaleDateString()}</td>
+              <td className="px-4 py-2">₹{crypto.purchasePrice}</td>
+              <td className="px-4 py-2">
+                {crypto.currentvalue ? `₹${crypto.currentvalue}` : "N/A"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+<div>{cryptochart.length > 0 && (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold mb-2">Crypto Investment Chart</h3>
+    <ResponsiveContainer width="100%" height={300}>
+      <LineChart data={cryptochart}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="CryptoName" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="CurrentValue" stroke="#00BFFF" />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+)}
+</div>
 
 
       <motion.div

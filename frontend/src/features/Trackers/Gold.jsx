@@ -1,24 +1,39 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Gold({ onClose }) {
   const [goldType, setGoldType] = useState("");
   const [quantity, setQuantity] = useState("");
   const [pricePerGram, setPricePerGram] = useState("");
   const [purchaseDate, setPurchaseDate] = useState("");
-  const [notes, setNotes] = useState("");
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit =  async (e) => {
     e.preventDefault();
 
     const newGold = {
       goldType,
       quantity,
-      pricePerGram,
+     Pricepergram: pricePerGram,
       purchaseDate,
-      notes,
+      
     };
 
-    console.log("Submitted Gold Asset:", newGold);
+     try {
+              const res = await axios.post(
+                "https://finanlytic.onrender.com/api/v1/dashboard/savegold",
+                newGold,
+                { withCredentials: true }
+              );
+              toast.success("Gold investment saved")
+              
+             
+        
+            } catch (error) {
+              toast.error(error.response?.data?.message || "Something went wrong");
+            }
+
+  
 
     onClose();
   };
@@ -85,15 +100,7 @@ export default function Gold({ onClose }) {
           </div>
 
           {/* Notes */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Notes (optional)</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700"
-              placeholder="e.g. BIS hallmark, locker info, etc."
-            />
-          </div>
+         
 
           {/* Buttons */}
           <div className="flex justify-between">

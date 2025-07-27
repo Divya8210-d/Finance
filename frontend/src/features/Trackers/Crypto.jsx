@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Crypto({ onClose }) {
   const [cryptoName, setCryptoName] = useState("");
@@ -6,21 +7,34 @@ export default function Crypto({ onClose }) {
   const [quantity, setQuantity] = useState("");
   const [purchasePrice, setPurchasePrice] = useState("");
   const [purchaseDate, setPurchaseDate] = useState("");
-  const [notes, setNotes] = useState("");
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newCrypto = {
-      cryptoName,
+      cryptoname :cryptoName,
       symbol,
       quantity,
       purchasePrice,
       purchaseDate,
-      notes,
+      
     };
 
-    console.log("Submitted Crypto Asset:", newCrypto);
+       try {
+                  const res = await axios.post(
+                    "https://finanlytic.onrender.com/api/v1/dashboard/savecrypto",
+                    newCrypto,
+                    { withCredentials: true }
+                  );
+                  toast.success("Gold investment saved")
+                  
+                 
+            
+                } catch (error) {
+                  toast.error(error.response?.data?.message || "Something went wrong");
+                }
+    
 
     onClose();
   };
@@ -98,16 +112,7 @@ export default function Crypto({ onClose }) {
           </div>
 
           {/* Notes */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Notes (optional)</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700"
-              placeholder="Wallet used, exchange info, etc."
-            />
-          </div>
-
+         
           {/* Buttons */}
           <div className="flex justify-between">
             <button

@@ -1,24 +1,38 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Stock({ onClose }) {
   const [stockSymbol, setStockSymbol] = useState("");
   const [numberOfShares, setNumberOfShares] = useState("");
   const [buyPrice, setBuyPrice] = useState("");
   const [purchaseDate, setPurchaseDate] = useState("");
-  const [notes, setNotes] = useState("");
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit =  async (e) => {
     e.preventDefault();
 
     const newStock = {
-      stockSymbol,
+     stocksymbol :stockSymbol,
       numberOfShares,
-      buyPrice,
+     buyprice: buyPrice,
       purchaseDate,
-      notes,
+      
     };
+       try {
+              const res = await axios.post(
+                "https://finanlytic.onrender.com/api/v1/dashboard/savestocks",
+                newStock,
+                { withCredentials: true }
+              );
+              toast.success("Stocks saved")
+              
+             
+        
+            } catch (error) {
+              toast.error(error.response?.data?.message || "Something went wrong");
+            }
 
-    console.log("Submitted Stock:", newStock);
+  
 
     onClose(); // close modal
   };
@@ -82,15 +96,7 @@ export default function Stock({ onClose }) {
           </div>
 
           {/* Notes */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Notes (optional)</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700"
-              placeholder="Brokerage, target price, etc."
-            />
-          </div>
+        
 
           {/* Buttons */}
           <div className="flex justify-between">

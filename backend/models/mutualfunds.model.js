@@ -2,6 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 
 const mutualfundsschema = new Schema({
+      user:{
+        type:String,
+        required:true
+    },
+
     fundname:{
         type:String,
         required:true,
@@ -14,7 +19,7 @@ const mutualfundsschema = new Schema({
         type:Date,
         required:true
     },
-    currentvalue:{
+    currentNavValue:{
         type:Number,
     
     }
