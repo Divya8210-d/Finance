@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function MutualFunds({ onClose }) {
   const [fundName, setFundName] = useState("");
@@ -21,8 +22,7 @@ export default function MutualFunds({ onClose }) {
     };
 
      try {
-          const res = await axios.post(
-            "https://finanlytic.onrender.com/api/v1/dashboard/savemutualfunds",
+          const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/savemutualfunds",
             newFund,
             { withCredentials: true }
           );
@@ -31,7 +31,7 @@ export default function MutualFunds({ onClose }) {
          
     
         } catch (error) {
-          toast.error(error.response?.data?.message || "Something went wrong");
+         
         }
 
     // Optionally reset fields or close modal

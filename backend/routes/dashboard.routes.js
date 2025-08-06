@@ -9,6 +9,7 @@ import { budgetinsight, budgetprediction, cashflow, saving, spendingtrends, week
 import { getBudgetmonthly, setbudget } from '../controllers/budget.controller.js';
 import { transacsuggestion } from '../controllers/transaction.controller.js';
 import { fetchcrypto, fetchgold, fetchmutualfunds, fetchstocks, savecrypto, savegold, savemutualfunds, savestocks } from '../controllers/tracker.controller.js';
+import { sendmsg } from '../controllers/user.controller.js';
 
 
 
@@ -46,7 +47,7 @@ router.post("/mutualfunds",verify,fetchmutualfunds)
 router.post("/stocks",verify,fetchstocks)
 router.post("/golds",verify,fetchgold);
 router.post("/crypto",verify,fetchcrypto);
-
+router.post("/mail",verify,sendmsg);
 
 
 

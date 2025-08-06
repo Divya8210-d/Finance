@@ -4,7 +4,7 @@ import { ApiError } from "../utilss/ApiError.js";
 import uploadprofile from "../utilss/cloudinary.js";
 import { ApiResponse } from "../utilss/ApiResponse.js";
 import { Spends } from "../models/spending.model.js";
-
+import sendmail from "../utilss/SendMail.js";
 
 
 
@@ -293,5 +293,24 @@ return res.status(200).json(new ApiResponse(200,"User updated"))
 })
 
 
+const sendmsg = asyncHandler((req,res)=>{
 
-export {register,login,logout ,deleteaccount,profilefetch,edit}
+const {mail} = req.body;
+
+
+
+if(!mail){
+    throw new ApiError(400,"Mail is required for connecting")
+}
+
+
+sendmail(mail);
+
+return res.status(200).json(200,"Issue raised")
+
+
+
+})
+
+
+export {register,login,logout ,deleteaccount,profilefetch,edit,sendmsg}

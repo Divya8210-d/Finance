@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function Crypto({ onClose }) {
   const [cryptoName, setCryptoName] = useState("");
@@ -32,7 +33,7 @@ export default function Crypto({ onClose }) {
                  
             
                 } catch (error) {
-                  toast.error(error.response?.data?.message || "Something went wrong");
+               
                 }
     
 

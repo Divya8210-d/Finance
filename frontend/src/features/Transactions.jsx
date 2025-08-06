@@ -38,20 +38,21 @@ export default function Transactions() {
     return { weekIndex, month };
   }
 
-  const todayTransactions = async () => {
-    const today = new Date().toISOString().split("T")[0];
-    try {
-      const res = await axios.post(
-        "https://finanlytic.onrender.com/api/v1/payment/transactions",
-        { date: today },
-        { withCredentials: true }
-      );
-      setTransactions(res.data.data);
-      setCurrentPage(1);
-    } catch (err) {
-      toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
-    }
-  };
+const todayTransactions = async () => {
+  const today = new Date().toISOString().split("T")[0];
+  try {
+    const res = await axios.post(
+      "https://finanlytic.onrender.com/api/v1/payment/transactions",
+      { date: today },
+      { withCredentials: true }
+    );
+    const sorted = res.data.data.sort((a, b) => new Date(b.dateofpurchase) - new Date(a.dateofpurchase));
+    setTransactions(sorted);
+    setCurrentPage(1);
+  } catch (err) {
+    toast.error("Something went wrong: " + (err.response?.data?.message || err.message));
+  }
+};
 
   const loadRazorpayScript = () =>
     new Promise((resolve) => {
@@ -503,7 +504,13 @@ const costcutting = async () => {
               currentTransactions.map((txn, idx) => (
                 <tr key={idx} className="border-t hover:bg-orange-50  dark:bg-gray-800">
                   <td className="p-2">{txn.category}</td>
-                  <td className="p-2">{txn.dateofpurchase || "N/A"}</td>
+                   {txn.dateofpurchase
+    ? new Date(txn.dateofpurchase).toLocaleDateString("en-IN", {
+        weekday: "short",
+        day: "numeric",
+        month: "short"
+      })
+    : "N/A"}
                   <td className="p-2">{txn.mode || "N/A"}</td>
                   <td className={`p-2 ${txn.amount >= 0 ? "text-green-600" : "text-red-500"}`}>
                     ₹{txn.amount}

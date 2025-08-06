@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function Stock({ onClose }) {
   const [stockSymbol, setStockSymbol] = useState("");
@@ -29,7 +30,7 @@ export default function Stock({ onClose }) {
              
         
             } catch (error) {
-              toast.error(error.response?.data?.message || "Something went wrong");
+            
             }
 
   

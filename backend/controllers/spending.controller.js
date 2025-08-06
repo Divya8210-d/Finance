@@ -23,6 +23,9 @@ if(expense){
     throw new ApiError(400,"Spends already created")
 }
 
+if(cashinhand>monthlyincome||cash>cashinhand||cashless>cashinhand||assests>cashinhand){
+  throw new ApiError(403,"Invalid")
+}
 
 //baaki fieLd ka validation hum frontend me dekh lenge
  const add = await Spends.create({ user:req.user.email,month,cashinhand,cash,cashless,assests,

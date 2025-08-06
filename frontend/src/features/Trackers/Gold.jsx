@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function Gold({ onClose }) {
   const [goldType, setGoldType] = useState("");
@@ -30,7 +31,7 @@ export default function Gold({ onClose }) {
              
         
             } catch (error) {
-              toast.error(error.response?.data?.message || "Something went wrong");
+             
             }
 
   

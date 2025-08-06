@@ -1,8 +1,9 @@
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
-
+import sendmail from '../../utils/SendMail.js';
 import { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 
 export default function Footer() {
@@ -20,7 +21,18 @@ export default function Footer() {
 const [email,setEmail] = useState("")
 
 
+const sendmsg = async function send(params) {
+try {
+  
+const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/mail",{mail:email},{withCredentials:true})
 
+toast.success(res.data.message)
+
+
+} catch (error) {
+  toast.error("Something went wrong: " + (error.response?.data?.message || err.message));
+}
+}
 
 
   return (    <section id="footer">
@@ -79,7 +91,7 @@ const [email,setEmail] = useState("")
             ]}
             className="w-full px-3 py-2 rounded-lg border border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
-          <button
+          <button onClick={sendmsg}
             className="mt-3 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition"
         
           >

@@ -289,7 +289,6 @@ const [cryptochart,setcryptochart] = useState([])
     } catch (err) {
       const message = err.response?.data?.message || "An unknown error occurred";
     
-      toast.error(message);
     }
   }
     const getstocks = async () => {
@@ -310,7 +309,7 @@ const [cryptochart,setcryptochart] = useState([])
     } catch (err) {
       const message = err.response?.data?.message || "An unknown error occurred";
     
-      toast.error(message);
+   
     }
   }
     const getgolds = async () => {
@@ -331,7 +330,7 @@ const [cryptochart,setcryptochart] = useState([])
     } catch (err) {
       const message = err.response?.data?.message || "An unknown error occurred";
     
-      toast.error(message);
+ 
     }
   }
     const getcrypto = async () => {
@@ -352,18 +351,18 @@ const [cryptochart,setcryptochart] = useState([])
      
     } catch (err) {
       const message = err.response?.data?.message || "An unknown error occurred";
-    
-      toast.error(message);
+   
     }
   }
 
 
-  useEffect(()=>{
-    getmutualfunds()
-    getgolds()
-    getstocks()
-    getcrypto()
-  })
+
+
+
+
+
+
+
   return (
     <div className="p-6 pl-10 text-gray-800 dark:text-gray-200 text-left font-inter">
       <ToastContainer position="top-center" autoClose={3000} />
