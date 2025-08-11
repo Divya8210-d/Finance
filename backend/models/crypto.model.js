@@ -33,4 +33,4 @@ const cryptosschema = new Schema({
 })
 
 
-export const Crypto = mongoose.model("Crypto",Crypto)
+export const Crypto = mongoose.model("Crypto",cryptosschema)
