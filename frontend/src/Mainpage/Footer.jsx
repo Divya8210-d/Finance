@@ -1,6 +1,6 @@
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
-import sendmail from '../../utils/SendMail.js';
+
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -27,10 +27,11 @@ try {
 const res = await axios.post("https://finanlytic.onrender.com/api/v1/dashboard/mail",{mail:email},{withCredentials:true})
 
 toast.success(res.data.message)
-
+setEmail("")
 
 } catch (error) {
-  toast.error("Something went wrong: " + (error.response?.data?.message || err.message));
+  toast.error("Something went wrong: " + (error.response?.data?.message || error.message));
+  setEmail("")
 }
 }
 

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 export default function MutualFunds({ onClose }) {
-  const [fundName, setFundName] = useState("");
+  const [fundname, setFundName] = useState("");
   const [investmentAmount, setInvestmentAmount] = useState("");
   const [investmentDate, setInvestmentDate] = useState("");
   
@@ -14,7 +14,7 @@ export default function MutualFunds({ onClose }) {
 
     
     const newFund = {
-      fundName,
+      fundname,
       investmentAmount,
       investmentDate,
       
@@ -49,7 +49,7 @@ export default function MutualFunds({ onClose }) {
             <label className="block text-sm font-medium mb-1">Fund Name</label>
             <input
               type="text"
-              value={fundName}
+              value={fundname}
               required
               onChange={(e) => setFundName(e.target.value)}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:bg-gray-700"

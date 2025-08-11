@@ -16,8 +16,10 @@ const savemutualfunds = asyncHandler(async (req,res) => {
      if(!fundname || !investmentAmount || !investmentDate) {
       throw new ApiError(400,"All the fields are required")
      }
+     
 
 const fund = await MutualFund.create({
+  user:req.user.email,
     fundname,
     investmentAmount,investmentDate
 })
@@ -84,10 +86,11 @@ const savestocks = asyncHandler(async (req,res) => {
      }
 
 const stock = await Stocks.create({
+  user:req.user.email,
     stocksymbol,
     numberofShares,
     purchaseDate,
-    buyPrice:buypricecc
+    buyPrice:buyprice
 
 })
 
@@ -146,6 +149,7 @@ const savegold = asyncHandler(async (req,res) => {
      }
 
 const gold = await Gold.create({
+  user:req.user.email,
     goldType,
     quantity,
     purchaseDate,
@@ -208,6 +212,7 @@ const savecrypto = asyncHandler(async (req,res) => {
      }
 
 const crypto = await Crypto.create({
+  user:req.user.email,
     cryptoname,
     symbol,purchaseDate,purchasePrice,
     quantity
