@@ -1,10 +1,10 @@
-import { Crypto } from "../models/crypto.model";
-import { Gold } from "../models/gold.model";
-import { MutualFund } from "../models/mutualfunds.model";
-import { Stocks } from "../models/stocks.model";
-import { ApiError } from "../utilss/ApiError";
-import { ApiResponse } from "../utilss/ApiResponse";
-import asyncHandler from "../utilss/asynchandler";
+import { Crypto } from "../models/crypto.model.js";
+import { Gold } from "../models/gold.model.js";
+import { MutualFund } from "../models/mutualfunds.model.js";
+import { Stocks } from "../models/stocks.model.js";
+import { ApiError } from "../utilss/ApiError.js";
+import { ApiResponse } from "../utilss/ApiResponse.js";
+import asyncHandler from "../utilss/asynchandler.js";
 
 
 
