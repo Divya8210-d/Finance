@@ -28,12 +28,6 @@ return res.status(200).json(200,"Fund saved successfully")
     })
 
 
-import fetch from "node-fetch";
-import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/ApiResponse.js";
-import ApiError from "../utils/ApiError.js";
-import { MutualFund } from "../models/mutualfund.model.js";
-
 const fetchmutualfunds = asyncHandler(async (req, res) => {
   const mutualfunds = await MutualFund.find({ user: req.user.email });
 
